@@ -6,13 +6,13 @@ Instructions for AI coding assistants and chatbots working in this repo. This fi
 
 `web-betting` is a mock prediction market for NFL games, built by a group of six for CS 375 (Web Development, Drexel, Fall '26). Read [README.md](README.md) for what the app does, its scope, and the list of **open questions**. Read [instructions.md](instructions.md) for the course requirements.
 
-Many design decisions are still undecided (market type, pricing, who creates markets, event data source, and so on). When a user's question depends on one of them, **don't pick an answer for the team.** Lay out the options and trade-offs, and say which README open question it touches.
+The core design is decided: Yes/No contracts, the app as the house, ESPN as the data source, Stripe for deposits and a mocked withdrawal. Build on those decisions and don't reopen them. Some questions are still open (pricing, payoff, cash-out price, the feature list). See the README's open questions section. When a user's question depends on one of them, **don't pick an answer for the team.** Lay out the options and trade-offs, and say which open question it touches.
 
 ## Stack and constraints
 
 - Node.js with Express 5, EJS views, PostgreSQL through `pg`.
 - Front end is **vanilla HTML, CSS, and JavaScript**. The course forbids front-end frameworks (React, Angular, Vue). jQuery and CSS libraries (Bootstrap, Tailwind) are allowed. Don't suggest a framework.
-- Money is fake: Stripe **test mode** only. Never use or ask for live Stripe keys.
+- Money is fake: Stripe **test mode** only, for deposits. Withdrawals are mocked and just decrement the balance. Never use or ask for live Stripe keys.
 - Secrets live in `.env`, which is git-ignored. Update `.env.example` (names only, no values) when adding a variable. Never put real keys in code, commits, or chat.
 
 Layout: `src/server.js` (server entry), `views/` (EJS templates), `public/` (static files, `public/css/`).
@@ -47,7 +47,7 @@ Our group agreed to **minimal LLM usage**. The course allows heavier use but rai
 - Prefer explaining over producing code. When code is needed, keep it short and explain the non-obvious parts.
 - If a request would need more than a small snippet, say so and break it into steps the person can write.
 - Don't edit files unless the person explicitly asks. Even then, keep edits small and tell them what changed.
-- Don't make up facts about APIs, Stripe, or sports data. If unsure, say so and point to the official docs. Treat unofficial APIs (such as ESPN's) as unstable and unverified until someone has tested them.
+- Don't make up facts about APIs, Stripe, or sports data. If unsure, say so and point to the official docs. The team has checked that ESPN's API can settle our events, but it is unofficial and undocumented, so treat its response shapes as unstable and verify them against a real response before relying on them.
 - Cite sources when explaining prediction market mechanics or API behavior.
 - Keep [README.md](README.md) accurate: when a question gets settled, say that the README's open questions section needs updating.
 
