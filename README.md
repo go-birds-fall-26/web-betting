@@ -48,14 +48,23 @@ Current scaffold:
 - Vanilla HTML, CSS, and client-side JavaScript. The course does not allow front-end frameworks like React, Angular, or Vue.
 - Deployed to the public internet (host not chosen yet)
 
+
 ## Open questions
 
 The team is still deciding the following. Treat them as unresolved, not as assumptions to build on. These will need to be addressed in future progress reports.
 
-- **Price drops:** what happens when a contract's price goes down after someone buys it?
-- **Payoff:** how is the payoff calculated? A worked example to answer: if I buy for 50¢, more people then agree and the price falls to 10¢, what do I get if I win?
-- **Cash-out price:** what price does the house pay when a user sells a contract back before the event ends?
-- **Feature list:** the course contract is still being refined. A formal feature list will be added when it exists.
+ - **Price drops:** what happens when a contract's price goes down after someone buys it?
+	 -   Once a user purchases a contract, the market price can increase, decrease, or stay the same. The final payout remains $1.00 per winning contract. If a user's contract price goes down, they have the opportunity to "cashout" their contract with a fee, or wait for the contract to resolve to either $0 or $1. If the user chooses to cash out, we will pay them the current price of the contract, meaning they will lose money if the contract is now worth less than when they bought it.
+ - **Payoff:** how is the payoff calculated? A worked example to answer: if I buy for 50¢, more people then agree and the price falls to 10¢, what do I get if I win?
+	 - This is not how the price works. If a user buys a Yes contract for 50¢ and more people begin to agree and also buy Yes contracts, the price of Yes will go up. A user is paid out in relation to what the price of the contract was when they bought it. For example, if a user bought two contracts at 50¢ and they resolve to $1, the user will be returned $2, meaning they made a $1 profit.
+ - **Cash-out price:** what price does the house pay when a user sells a contract back before the event ends?
+	 - We plan to use the following formula to calculate fees for both buying and selling. If a user doesn't cash out early and allows their contract to resolve, we will not take a fee.
+		 - fee = ceil(0.07 * C * P * (1-P), where:
+			 - ceil rounds up to the nearest cent (e.g. $0.0175 -> $0.02)
+			 - C = number of contracts being sold
+			 - P = contract price (in dollars)
+			 - 0.07 = fee rate (this value is subject to change)
+ - **Feature list:** the course contract is still being refined. A formal feature list will be added when it exists.
 
 ## LLM usage
 
