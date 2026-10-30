@@ -8,10 +8,13 @@
     "pg": "^8.23.1"
   },
   "devDependencies": {
+    "dotenv-cli": "^11.1.0",
     "nodemon": "^3.1.14"
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "db:init": "dotenv -e .env -- psql --dbname=%DATABASE_URL% --file=src/db/init.sql",
+    "db:reset": "dotenv -e .env -- psql --dbname=%DATABASE_URL% --file=src/db/reset.sql"
   }
 }
