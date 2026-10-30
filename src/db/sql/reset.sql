@@ -4,5 +4,3 @@ DROP TABLE IF EXISTS markets CASCADE;
 DROP TABLE IF EXISTS markets_outcomes CASCADE;
 DROP TABLE IF EXISTS bets CASCADE;
 DROP TABLE IF EXISTS wallet_transactions CASCADE;
-
-\ir init.sql
