@@ -40,8 +40,11 @@ Current scaffold:
 ```bash
 npm install
 cp .env.example .env   # then edit values as needed
-npm run dev     # dev mode (live-reloads server using nodemon)
+npm run dev            # dev mode (live-reloads server using nodemon)
 npm run start
+
+createdb web_betting   # or whatever you set your db name to be
+npm run seed           # seed db
 ```
 
 ## Open questions
