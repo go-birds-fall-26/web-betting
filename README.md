@@ -6,6 +6,19 @@ A mock prediction market for NFL games, in the spirit of [Kalshi](https://kalshi
 
 > **Status:** early development. The repo is a scaffold. The core design is decided (see [Scope](#scope)); pricing and payoff are still being worked out (see [Open questions](#open-questions)).
 
+## Getting started
+
+```bash
+npm install
+cp .env.example .env   # then edit values as needed
+npm run dev            # dev mode (live-reloads server using nodemon)
+npm run start
+
+createdb web_betting   # or whatever you set your db name to be
+npm run seed           # seed db
+npm run seed:reset     # reset & seed db
+```
+
 ## What it does
 
 - **Accounts:** sign up, log in, and keep a balance.
@@ -34,18 +47,6 @@ Current scaffold:
 - PostgreSQL through [`pg`](https://node-postgres.com/)
 - Vanilla HTML, CSS, and client-side JavaScript. The course does not allow front-end frameworks like React, Angular, or Vue.
 - Deployed to the public internet (host not chosen yet)
-
-## Getting started
-
-```bash
-npm install
-cp .env.example .env   # then edit values as needed
-npm run dev            # dev mode (live-reloads server using nodemon)
-npm run start
-
-createdb web_betting   # or whatever you set your db name to be
-npm run seed           # seed db
-```
 
 ## Open questions
 
