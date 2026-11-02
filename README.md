@@ -26,7 +26,8 @@ npm run seed:reset     # reset & seed db
 - **Events:** users select from a mix of hardcoded events and event templates, and can create events from those templates. Templates start simple (for example, "Team X wins" or "Player X scores") and may grow to more sophisticated events later (for example, a player scoring between 5 and 9 touchdowns). Every event must be verifiable automatically through ESPN's data.
 - **Contracts:** on an event, a user bets **Yes** or **No** by buying a contract. If the user loses, the contract resolves to zero and the money they put in is gone.
 - **The house:** the app is the counterparty to every contract. Users can cash out before the event ends by selling their contract back to the house. At the moment, selling contracts to other users is a nice-to-have, not part of the current plan.
-- **Pricing:** the house does not set odds. A contract's price is determined by the volume of people buying contracts, so it moves as more users buy Yes or No. The exact formula is not worked out yet.
+- **Pricing:** the house does not set odds. Every market opens with zero contracts sold, priced at $0.50 for Yes and $0.50 for No. Prices then move with the volume of Yes and No contracts bought, and always stay between $0.01 and $0.99. To keep the first few purchases from swinging the price too far, the pricing formula includes a smoothing constant, K, set to 10 for the MVP.
+	- [PRICING FORMULA GOES HERE]
 - **Search and history:** users can search for events and see every event they've created and every contract they've bought, won, and lost.
 - **Settlement:** the server finds out when an event is over (a scheduled job, e.g. a cron job or `setInterval`, checking ESPN), decides the outcome, and pays the winners.
 - **Synthetic activity:** a prediction market needs traffic to be interesting, so we plan to seed the database and simulate other users with generated data (e.g. Faker.js).
@@ -59,12 +60,19 @@ The team is still deciding the following. Treat them as unresolved, not as assum
 	 - This is not how the price works. If a user buys a Yes contract for 50¢ and more people begin to agree and also buy Yes contracts, the price of Yes will go up. A user is paid out in relation to what the price of the contract was when they bought it. For example, if a user bought two contracts at 50¢ and they resolve to $1, the user will be returned $2, meaning they made a $1 profit.
  - **Cash-out price:** what price does the house pay when a user sells a contract back before the event ends?
 	 - We plan to use the following formula to calculate fees for both buying and selling. If a user doesn't cash out early and allows their contract to resolve, we will not take a fee.
-		 - fee = ceil(0.07 * C * P * (1-P), where:
+		 - fee = ceil(0.07 * C * P * (1-P)), where:
 			 - ceil rounds up to the nearest cent (e.g. $0.0175 -> $0.02)
 			 - C = number of contracts being sold
 			 - P = contract price (in dollars)
 			 - 0.07 = fee rate (this value is subject to change)
+     - **Balance changes:** using C, P, and fee as defined above:
+		 - Buying: the user's balance decreases by P × C + fee.
+		 - Cashing out before the event ends: the user's balance increases by P × C − fee.
+		 - Event resolves: each winning contract pays $1.00 and each losing contract pays $0. No fee is charged.
  - **Feature list:** the course contract is still being refined. A formal feature list will be added when it exists.
+ - **Ties and cancellations:** what happens when a game ends in a tie or is cancelled?
+	 - Tie: we plan to resolve both sides at $0.50 per contract, which is how Kalshi handles ties on contracts that have no tie option. If this proves too complicated, the fallback is that the house keeps the money.
+	 - Still undecided: whether a fee applies to a $0.50 tie payout, and how to handle cancelled games (one suggestion is to refund users while the house keeps the fees).
 
 ## LLM usage
 
