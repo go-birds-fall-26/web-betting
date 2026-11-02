@@ -5,77 +5,64 @@ const {
   withdrawMoney,
 } = require("../services/wallet");
 
+const AppError = require("../errors/AppError");
+
 router.get("/", (req, res) => {
   res.render("account", { title: "Account" });
 });
 
 router.get("/balance/:userId", async (req, res) => {
-  let userId = Number(req.params.userId);
   try {
+    let userId = Number(req.params.userId);
     let balance = await getUserBalance(userId);
-    return res.status(200).json({
-      balance: balance,
-    });
+    return res.status(200).json({ balance });
   } catch (error) {
-    console.error("Get Balance Failed:", error);
-    return res.status(500).json({
-      error: "Failed to get balance",
-    });
+    return handleWalletError(res, error);
   }
 });
 
 router.post("/deposit", async (req, res) => {
-  let userId = Number(req.body.userId);
-  let amountCents = Number(req.body.amountCents);
-
-  // Deposit amount validation
-  // TO DO: Limit to a maximum deposit amount in a 24 hour interval
-  if (!Number.isSafeInteger(amountCents) || amountCents <= 0) {
-    return res.status(400).json({
-      error: "Deposit amount must be greater than 0",
-    });
-  }
   try {
+    let userId = Number(req.body.userId);
+    let amountCents = Number(req.body.amountCents);
+
     // TODO: Stripe checkout + webhook that waits for payment validation
-    await depositMoney(userId, amountCents);
+
+    let balance = await depositMoney(userId, amountCents);
     return res.status(200).json({
       message: "Deposit succesfull",
+      newBalance: balance,
     });
   } catch (error) {
-    console.error("Deposit Failed:", error);
-    return res.status(500).json({
-      error: "Failed to deposit money",
-    });
+    return handleWalletError(res, error);
   }
 });
 
 router.post("/withdraw", async (req, res) => {
-  let userId = Number(req.body.userId);
-  let amountCents = Number(req.body.amountCents);
-
-  if (!Number.isSafeInteger(amountCents) || amountCents <= 0) {
-    return res.status(400).json({
-      error: "Withdraw amount must be greater than 0",
-    });
-  }
-  let currentBalance = await getUserBalance(userId);
-  if (amountCents > currentBalance) {
-    return res.status(400).json({
-      error: "Withdraw amount must be less than currentBalance",
-    });
-  }
-
   try {
-    await withdrawMoney(userId, amountCents);
+    let userId = Number(req.body.userId);
+    let amountCents = Number(req.body.amountCents);
+    let balance = await withdrawMoney(userId, amountCents);
     return res.status(200).json({
       message: "Withdraw succesfull",
+      newBalance: balance,
     });
   } catch (error) {
-    console.error("Withdraw failed:", error);
-    return res.status(500).json({
-      error: "Failed to withdraw money",
-    });
+    return handleWalletError(res, error);
   }
 });
+
+function handleWalletError(res, error) {
+  if (error instanceof AppError) {
+    return res.status(error.statusCode).json({
+      error: error.message,
+    });
+  }
+
+  console.error("Unexpected Wallet error:", error);
+  return res.status(500).json({
+    error: "Internal server errror",
+  });
+}
 
 module.exports = router;
