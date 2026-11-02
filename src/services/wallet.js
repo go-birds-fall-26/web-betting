@@ -1,5 +1,4 @@
 const pool = require("../db/pool");
-const { InvalidUserError, UserNotFoundError } = require("../errors/UserErrors");
 
 const {
   InvalidAmountError,
@@ -7,23 +6,21 @@ const {
   BalanceLimitError,
 } = require("../errors/WalletErrors");
 
+const { validateUserId, validateUserExists } = require("./users");
+
 async function getUserBalance(userId, client) {
-  validateUserId(userId);
+  await validateUserExists(userId);
 
   let result = await client.query(
     "SELECT balance_cents FROM users WHERE id = $1 FOR UPDATE",
     [userId],
   );
 
-  if (result.rows.length === 0) {
-    throw new UserNotFoundError();
-  }
-
   return result.rows[0].balance_cents;
 }
 
 async function getUserTransactinos(userId, client) {
-  validateUserId(userId);
+  await validateUserExists(userId);
 
   // Query to get all the transactions for a user and return the list of all transaction rows
   let result = await client.query(
@@ -127,12 +124,6 @@ async function updateBalance(userId, newBalance, client = pool) {
     userId,
   ]);
   return newBalance;
-}
-
-function validateUserId(userId) {
-  if (!Number.isSafeInteger(userId) || userId <= 0) {
-    throw new InvalidUserError();
-  }
 }
 
 function validateAmount(amountCents) {

@@ -7,8 +7,8 @@ class InvalidUserError extends AppError {
 }
 
 class UserNotFoundError extends AppError {
-  constructor() {
-    super("User not found", 404);
+  constructor(userId) {
+    super(`User ID = ${userId} not found`, 404);
   }
 }
 
