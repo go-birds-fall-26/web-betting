@@ -3,6 +3,7 @@ const {
   depositMoney,
   getUserBalance,
   withdrawMoney,
+  getUserTransactions,
 } = require("../services/wallet");
 
 const AppError = require("../errors/AppError");
@@ -16,6 +17,16 @@ router.get("/balance/:userId", async (req, res) => {
     let userId = Number(req.params.userId);
     let balance = await getUserBalance(userId);
     return res.status(200).json({ balance });
+  } catch (error) {
+    return handleWalletError(res, error);
+  }
+});
+
+router.get("/transactions/:userId", async (req, res) => {
+  try {
+    let userId = Number(req.params.userId);
+    let transactions = await getUserTransactions(userId);
+    return res.status(200).json({ transactions });
   } catch (error) {
     return handleWalletError(res, error);
   }

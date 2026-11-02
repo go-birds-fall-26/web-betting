@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS wallet_transactions (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL REFERENCES users(id),
-  transaction_type TEXT NOT NULL CHECK (transaction_type IN ('deposit', 'withdrawl', 'bet', 'payout', 'refund')),
+  transaction_type TEXT NOT NULL CHECK (transaction_type IN ('deposit', 'withdraw', 'bet', 'payout', 'refund')),
   amount_cents INTEGER NOT NULL CHECK (amount_cents <> 0),
   balance_after_cents INTEGER NOT NULL CHECK (balance_after_cents >= 0),
   stripe_session_id TEXT UNIQUE,

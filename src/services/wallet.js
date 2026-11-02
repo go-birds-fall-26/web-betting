@@ -8,7 +8,7 @@ const {
 
 const { validateUserId, validateUserExists } = require("./users");
 
-async function getUserBalance(userId, client) {
+async function getUserBalance(userId, client = pool) {
   await validateUserExists(userId);
 
   let result = await client.query(
@@ -19,16 +19,15 @@ async function getUserBalance(userId, client) {
   return result.rows[0].balance_cents;
 }
 
-async function getUserTransactinos(userId, client) {
-  await validateUserExists(userId);
+async function getUserTransactions(userId, client = pool) {
+  await validateUserExists(userId, client);
 
-  // Query to get all the transactions for a user and return the list of all transaction rows
   let result = await client.query(
-    "SELECT * FROM wallet_transactions WHERE user_id = $1",
+    "SELECT * FROM wallet_transactions WHERE user_id = $1 ORDER BY created_at DESC, id DESC",
     [userId],
   );
 
-  return result;
+  return result.rows;
 }
 
 // Deposit money to a users balance and update wallet_transactions
@@ -87,7 +86,7 @@ async function withdrawMoney(userId, amountCents, stripeSessionId = null) {
     await recordTransaction(
       client,
       userId,
-      "withdrawl",
+      "withdraw",
       amountCents,
       newBalance,
       stripeSessionId,
@@ -132,4 +131,9 @@ function validateAmount(amountCents) {
   }
 }
 
-module.exports = { getUserBalance, depositMoney, withdrawMoney };
+module.exports = {
+  getUserBalance,
+  getUserTransactions,
+  depositMoney,
+  withdrawMoney,
+};
