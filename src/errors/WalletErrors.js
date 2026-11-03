@@ -12,6 +12,15 @@ class InsufficientBalanceError extends AppError {
   }
 }
 
+class InvalidTransactionTypeError extends AppError {
+  constructor(transactionType, validTypes) {
+    super(
+      `Invalid transaction type: '${transactionType}'. Must be one of: ${validTypes.join(", ")}`,
+      400,
+    );
+  }
+}
+
 class BalanceLimitError extends AppError {
   constructor() {
     super("Balance exceeds maximum allowed", 400);
@@ -21,5 +30,6 @@ class BalanceLimitError extends AppError {
 module.exports = {
   InvalidAmountError,
   InsufficientBalanceError,
+  InvalidTransactionTypeError,
   BalanceLimitError,
 };

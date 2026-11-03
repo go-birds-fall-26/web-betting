@@ -1,14 +1,25 @@
+const { validate } = require("node-cron");
 const pool = require("../db/pool");
 
 const {
   InvalidAmountError,
   InsufficientBalanceError,
-  BalanceLimitError,
+  InvalidTransactionTypeError,
 } = require("../errors/WalletErrors");
 
 const { validateUserId, validateUserExists } = require("./users");
+("deposit", "withdraw", "bet", "payout", "refund");
+
+const TransactionType = Object.freeze({
+  DEPOSIT: "deposit",
+  WITHDRAW: "withdraw",
+  BET: "bet",
+  PAYOUT: "payout",
+  REFUND: "refund",
+});
 
 async function getUserBalance(userId, client = pool) {
+  // TO DO: Users can only view their own balance and no one elses
   await validateUserExists(userId);
 
   let result = await client.query(
@@ -30,28 +41,69 @@ async function getUserTransactions(userId, client = pool) {
   return result.rows;
 }
 
-// Deposit money to a users balance and update wallet_transactions
 async function depositMoney(userId, amountCents, stripeSessionId = null) {
   // TO DO: Limit to a maximum deposit amount in a 24 hour interval
-  validateUserId(userId);
   validateAmount(amountCents);
+  return applyBalanceChange(userId, amountCents, TransactionType.DEPOSIT, {
+    stripeSessionId,
+  });
+}
+
+async function withdrawMoney(userId, amountCents) {
+  validateAmount(amountCents);
+  return applyBalanceChange(userId, -amountCents, TransactionType.WITHDRAW);
+}
+
+async function chargeBet(userId, betId, amountCents) {
+  validateAmount(amountCents);
+  return applyBalanceChange(userId, -amountCents, TransactionType.BET, {
+    betId,
+  });
+}
+
+async function processPayout(userId, betId, amountCents) {
+  validateAmount(amountCents);
+  return applyBalanceChange(userId, amountCents, TransactionType.PAYOUT, {
+    betId,
+  });
+}
+
+async function processRefund(userId, betId, amountCents) {
+  validateAmount(amountCents);
+  return applyBalanceChange(userId, amountCents, TransactionType.REFUND, {
+    betId,
+  });
+}
+
+async function applyBalanceChange(
+  userId,
+  signedAmountCents,
+  transactionType,
+  { stripeSessionId = null, betId = null } = {},
+) {
+  validateUserId(userId);
 
   let client = await pool.connect();
 
   try {
-    // Starts a database transaction (rolls back if something fails)
+    // starts a database transaction
     await client.query("BEGIN");
     let currentBalance = await getUserBalance(userId, client);
-    let newBalance = currentBalance + amountCents;
+    let newBalance = currentBalance + signedAmountCents;
+
+    if (newBalance < 0) {
+      throw new InsufficientBalanceError();
+    }
 
     await updateBalance(userId, newBalance, client);
     await recordTransaction(
       client,
       userId,
-      "deposit",
-      amountCents,
+      transactionType,
+      signedAmountCents,
       newBalance,
       stripeSessionId,
+      betId,
     );
 
     // Saves changes
@@ -66,42 +118,6 @@ async function depositMoney(userId, amountCents, stripeSessionId = null) {
   }
 }
 
-// Withdraw money from a users account and return their new balance
-async function withdrawMoney(userId, amountCents, stripeSessionId = null) {
-  // Valiadte withdraw amount is valid
-  validateUserId(userId);
-  validateAmount(amountCents);
-
-  let client = await pool.connect();
-
-  try {
-    await client.query("BEGIN");
-
-    let currentBalance = await getUserBalance(userId, client);
-    if (amountCents > currentBalance) {
-      throw new InsufficientBalanceError();
-    }
-    let newBalance = Math.max(0, currentBalance - amountCents);
-    await updateBalance(userId, newBalance, client);
-    await recordTransaction(
-      client,
-      userId,
-      "withdraw",
-      amountCents,
-      newBalance,
-      stripeSessionId,
-    );
-
-    await client.query("COMMIT");
-    return newBalance;
-  } catch (error) {
-    await client.query("ROLLBACK");
-    throw error;
-  } finally {
-    client.release();
-  }
-}
-
 async function recordTransaction(
   client,
   userId,
@@ -109,11 +125,17 @@ async function recordTransaction(
   amountCents,
   newBalance,
   stripeSessionId = null,
+  betId = null,
 ) {
+  let validTypes = Object.values(TransactionType);
+  if (!validTypes.includes(transactionType)) {
+    throw new InvalidTransactionTypeError(transactionType, validTypes);
+  }
+
   await client.query(
-    `INSERT INTO wallet_transactions (user_id, transaction_type, amount_cents, balance_after_cents, stripe_session_id)
-        VALUES ($1, $2, $3, $4, $5)`,
-    [userId, transactionType, amountCents, newBalance, stripeSessionId],
+    `INSERT INTO wallet_transactions (user_id, transaction_type, amount_cents, balance_after_cents, stripe_session_id, bet_id)
+        VALUES ($1, $2, $3, $4, $5, $6)`,
+    [userId, transactionType, amountCents, newBalance, stripeSessionId, betId],
   );
 }
 
@@ -136,4 +158,7 @@ module.exports = {
   getUserTransactions,
   depositMoney,
   withdrawMoney,
+  chargeBet,
+  processPayout,
+  processRefund,
 };

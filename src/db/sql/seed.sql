@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS wallet_transactions (
   amount_cents INTEGER NOT NULL CHECK (amount_cents <> 0),
   balance_after_cents INTEGER NOT NULL CHECK (balance_after_cents >= 0),
   stripe_session_id TEXT UNIQUE,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  bet_id INTEGER NULL
 );
 
 -- Development/Test User
