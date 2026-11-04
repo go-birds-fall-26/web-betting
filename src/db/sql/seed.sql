@@ -1,5 +1,7 @@
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -30,6 +32,6 @@ CREATE TABLE IF NOT EXISTS wallet_transactions (
 );
 
 -- Development/Test User
-INSERT INTO users (email, password_hash, balance_cents)
-VALUES ('test_user@example.com', 'placeholder_hash', 0)
+INSERT INTO users (first_name, last_name, email, password_hash, balance_cents)
+VALUES ('Test', 'User', 'test_user@example.com', 'placeholder_hash', 0)
 ON CONFLICT (email) DO NOTHING;

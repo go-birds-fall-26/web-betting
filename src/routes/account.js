@@ -1,4 +1,5 @@
 const router = require("express").Router();
+
 const {
   depositMoney,
   getUserBalance,
@@ -7,9 +8,25 @@ const {
 } = require("../services/wallet");
 
 const AppError = require("../errors/AppError");
+const { getUserInformation } = require("../services/users");
+const { getAmountCents, formatAmountCents } = require("../utils/money");
 
-router.get("/", (req, res) => {
-  res.render("account", { title: "Account" });
+router.get("/", async (req, res) => {
+  try {
+    // Swap to req.session.userId once a user is logged in
+    let userId = Number(req.params.userId || process.env.DEV_USER_ID);
+    let user = await getUserInformation(userId);
+    let transactions = await getUserTransactions(userId);
+
+    res.render("account", {
+      title: "Account",
+      user,
+      transactions,
+      formatAmountCents,
+    });
+  } catch (error) {
+    handleWalletError(error);
+  }
 });
 
 router.get("/balance/:userId", async (req, res) => {
@@ -24,7 +41,7 @@ router.get("/balance/:userId", async (req, res) => {
 
 router.get("/transactions/:userId", async (req, res) => {
   try {
-    let userId = Number(req.params.userId);
+    let userId = Number(req.params.userId || process.env.DEV_USER_ID);
     let transactions = await getUserTransactions(userId);
     return res.status(200).json({ transactions });
   } catch (error) {
@@ -34,16 +51,13 @@ router.get("/transactions/:userId", async (req, res) => {
 
 router.post("/deposit", async (req, res) => {
   try {
-    let userId = Number(req.body.userId);
-    let amountCents = Number(req.body.amountCents);
+    let userId = getUserId(req);
+    let amountCents = getAmountCents(req.body.amount);
 
     // TODO: Stripe checkout + webhook that waits for payment validation
 
     let balance = await depositMoney(userId, amountCents);
-    return res.status(200).json({
-      message: "Deposit succesfull",
-      newBalance: balance,
-    });
+    return res.redirect("/account");
   } catch (error) {
     return handleWalletError(res, error);
   }
@@ -51,17 +65,18 @@ router.post("/deposit", async (req, res) => {
 
 router.post("/withdraw", async (req, res) => {
   try {
-    let userId = Number(req.body.userId);
-    let amountCents = Number(req.body.amountCents);
+    let userId = getUserId(req);
+    let amountCents = getAmountCents(req.body.amount);
     let balance = await withdrawMoney(userId, amountCents);
-    return res.status(200).json({
-      message: "Withdraw succesfull",
-      newBalance: balance,
-    });
+    return res.redirect("/account");
   } catch (error) {
     return handleWalletError(res, error);
   }
 });
+
+function getUserId(req) {
+  return Number(req.body.userId || process.env.DEV_USER_ID);
+}
 
 function handleWalletError(res, error) {
   if (error instanceof AppError) {

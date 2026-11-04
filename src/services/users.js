@@ -19,4 +19,14 @@ async function validateUserExists(userId, client = pool) {
   }
 }
 
-module.exports = { validateUserId, validateUserExists };
+async function getUserInformation(userId, client = pool) {
+  validateUserExists(userId);
+  let result = await client.query(
+    "SELECT first_name, last_name, email, balance_cents FROM users WHERE id = $1",
+    [userId],
+  );
+
+  return result.rows[0];
+}
+
+module.exports = { validateUserId, validateUserExists, getUserInformation };

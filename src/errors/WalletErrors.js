@@ -1,8 +1,8 @@
 const AppError = require("./AppError");
 
 class InvalidAmountError extends AppError {
-  constructor() {
-    super("Amount must be a positive integer", 400);
+  constructor(amount) {
+    super(`Amount: ${amount}  must be a positive number`, 400);
   }
 }
 
