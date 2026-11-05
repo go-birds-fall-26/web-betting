@@ -12,7 +12,9 @@ app.use(expressLayouts);
 app.set("view engine", "ejs");
 app.locals.title = "web-betting";
 
-app.use("/webhooks/stripe", stripeWebhookRouter);
+if (process.env.STRIPE_ENABLE === "true") {
+  app.use("/webhooks/stripe", stripeWebhookRouter);
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
       formatAmountCents,
     });
   } catch (error) {
-    handleWalletError(error);
+    handleWalletError(res, error);
   }
 });
 
@@ -71,7 +71,7 @@ router.post("/withdraw", async (req, res) => {
     let userId = getUserId(req);
     let amountCents = getAmountCents(req.body.amount);
     let balance = await withdrawMoney(userId, amountCents);
-    return res.redirect("/account");
+    return res.redirect(303, "/account");
   } catch (error) {
     return handleWalletError(res, error);
   }

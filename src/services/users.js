@@ -20,7 +20,7 @@ async function validateUserExists(userId, client = pool) {
 }
 
 async function getUserInformation(userId, client = pool) {
-  validateUserExists(userId);
+  await validateUserExists(userId);
   let result = await client.query(
     "SELECT first_name, last_name, email, balance_cents FROM users WHERE id = $1",
     [userId],

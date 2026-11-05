@@ -1,4 +1,3 @@
-const { validate } = require("node-cron");
 const pool = require("../db/pool");
 
 const {
@@ -8,8 +7,6 @@ const {
 } = require("../errors/WalletErrors");
 
 const { validateUserId, validateUserExists } = require("./users");
-("deposit", "withdraw", "bet", "payout", "refund");
-
 const TransactionType = Object.freeze({
   DEPOSIT: "deposit",
   WITHDRAW: "withdraw",
@@ -19,9 +16,18 @@ const TransactionType = Object.freeze({
 });
 
 async function getUserBalance(userId, client = pool) {
-  // TO DO: Users can only view their own balance and no one elses
-  await validateUserExists(userId);
+  await validateUserExists(userId, client);
 
+  let result = await client.query(
+    "SELECT balance_cents FROM users WHERE id = $1",
+    [userId],
+  );
+
+  return result.rows[0].balance_cents;
+}
+
+async function getUserBalanceForUpdate(userId, client = pool) {
+  await validateUserExists(userId, client);
   let result = await client.query(
     "SELECT balance_cents FROM users WHERE id = $1 FOR UPDATE",
     [userId],
@@ -88,7 +94,7 @@ async function applyBalanceChange(
   try {
     // starts a database transaction
     await client.query("BEGIN");
-    let currentBalance = await getUserBalance(userId, client);
+    let currentBalance = await getUserBalanceForUpdate(userId, client);
 
     if (stripeSessionId !== null) {
       let existing = await client.query(
@@ -161,7 +167,7 @@ async function updateBalance(userId, newBalance, client = pool) {
 
 function validateAmount(amountCents) {
   if (!Number.isSafeInteger(amountCents) || amountCents <= 0) {
-    throw new InvalidAmountError();
+    throw new InvalidAmountError(amountCents);
   }
 }
 
