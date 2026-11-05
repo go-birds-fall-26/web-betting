@@ -3,13 +3,12 @@ const stripe = require("../services/stripe");
 
 const {
   depositMoney,
-  getUserBalance,
   withdrawMoney,
   getUserTransactions,
 } = require("../services/wallet");
 
 const AppError = require("../errors/AppError");
-const { getUserInformation, validateUserExists } = require("../services/users");
+const { getUserInformation } = require("../services/users");
 const { getAmountCents, formatAmountCents } = require("../utils/money");
 
 router.get("/", async (req, res) => {
@@ -30,32 +29,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/balance/:userId", async (req, res) => {
-  try {
-    let userId = Number(req.params.userId);
-    let balance = await getUserBalance(userId);
-    return res.status(200).json({ balance });
-  } catch (error) {
-    return handleWalletError(res, error);
-  }
-});
-
-router.get("/transactions/:userId", async (req, res) => {
-  try {
-    let userId = Number(req.params.userId || process.env.DEV_USER_ID);
-    let transactions = await getUserTransactions(userId);
-    return res.status(200).json({ transactions });
-  } catch (error) {
-    return handleWalletError(res, error);
-  }
-});
-
 router.post("/deposit", async (req, res) => {
   try {
     let userId = getUserId(req);
     let amountCents = getAmountCents(req.body.amount);
 
-    // Deposit without Stripe Payment Popup
     if (process.env.STRIPE_ENABLED !== "true") {
       let balance = await depositMoney(userId, amountCents);
       return res.redirect(303, "/account");
