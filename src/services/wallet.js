@@ -89,6 +89,18 @@ async function applyBalanceChange(
     // starts a database transaction
     await client.query("BEGIN");
     let currentBalance = await getUserBalance(userId, client);
+
+    if (stripeSessionId !== null) {
+      let existing = await client.query(
+        `SELECT 1 FROM wallet_transactions WHERE stripe_session_id = $1`,
+        [stripeSessionId],
+      );
+      if (existing.rows.length > 0) {
+        await client.query("COMMIT");
+        return currentBalance;
+      }
+    }
+
     let newBalance = currentBalance + signedAmountCents;
 
     if (newBalance < 0) {
