@@ -1,1 +1,52 @@
-<h1>Account</h1>
+<h1>My Account</h1>
+
+<h2> Information </h2>
+<p>
+    Name: <%= user.first_name %>
+        <%= user.last_name %>
+</p>
+<p> Email: <%= user.email %>
+</p>
+<p>
+    Balance: <%= formatAmountCents(user.balance_cents) %>
+</p>
+
+<form action="/account/deposit" method="POST">
+    <input type="number" name="amount" step="0.01" required>
+    <button type="submit"> Deposit</button>
+</form>
+
+<form action="/account/withdraw" method="POST">
+    <input type="number" name="amount" step="0.01" required>
+    <button type="submit"> Withdraw</button>
+</form>
+
+<h2> Transaction History </h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Balance After</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% transactions.forEach(transaction=> { %>
+            <tr>
+                <td>
+                    <%= transaction.transaction_type %>
+                </td>
+                <td>
+                    <%= formatAmountCents(transaction.amount_cents) %>
+                </td>
+                <td>
+                    <%= formatAmountCents(transaction.balance_after_cents) %>
+                </td>
+                <td>
+                    <%= new Date(transaction.created_at).toLocaleString() %>
+                </td>
+            </tr>
+            <% }) %>
+    </tbody>
+</table>
