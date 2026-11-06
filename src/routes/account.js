@@ -5,6 +5,7 @@ const {
   depositMoney,
   withdrawMoney,
   getUserTransactions,
+  validateDepositAmount,
 } = require("../services/wallet");
 
 const AppError = require("../errors/AppError");
@@ -13,8 +14,8 @@ const { getAmountCents, formatAmountCents } = require("../utils/money");
 
 router.get("/", async (req, res) => {
   try {
-    // Swap to req.session.userId once a user is logged in
-    let userId = Number(req.params.userId || process.env.DEV_USER_ID);
+    // TO DO: Swap to req.session.userId once a user is logged in
+    let userId = Number(process.env.DEV_USER_ID);
     let user = await getUserInformation(userId);
     let transactions = await getUserTransactions(userId);
 
@@ -33,6 +34,7 @@ router.post("/deposit", async (req, res) => {
   try {
     let userId = getUserId(req);
     let amountCents = getAmountCents(req.body.amount);
+    await validateDepositAmount(userId, amountCents);
 
     if (process.env.STRIPE_ENABLED !== "true") {
       let balance = await depositMoney(userId, amountCents);
@@ -56,6 +58,7 @@ router.post("/withdraw", async (req, res) => {
 });
 
 function getUserId(req) {
+  // TO DO: Swap to req.session.userId once a user is logged in
   return Number(req.body.userId || process.env.DEV_USER_ID);
 }
 

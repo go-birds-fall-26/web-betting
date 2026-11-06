@@ -4,6 +4,7 @@ const {
   InvalidAmountError,
   InsufficientBalanceError,
   InvalidTransactionTypeError,
+  DepositLimitExceededError,
 } = require("../errors/WalletErrors");
 
 const { validateUserId, validateUserExists } = require("./users");
@@ -14,6 +15,8 @@ const TransactionType = Object.freeze({
   PAYOUT: "payout",
   REFUND: "refund",
 });
+
+const MAX_DAILY_DEPOSIT_CENTS = 2000000; // 20k
 
 async function getUserBalance(userId, client = pool) {
   await validateUserExists(userId, client);
@@ -48,7 +51,6 @@ async function getUserTransactions(userId, client = pool) {
 }
 
 async function depositMoney(userId, amountCents, stripeSessionId = null) {
-  // TO DO: Limit to a maximum deposit amount in a 24 hour interval
   validateAmount(amountCents);
   return applyBalanceChange(userId, amountCents, TransactionType.DEPOSIT, {
     stripeSessionId,
@@ -171,6 +173,24 @@ function validateAmount(amountCents) {
   }
 }
 
+async function validateDepositAmount(userId, amountCents, client = pool) {
+  validateAmount(amountCents);
+  let result = await client.query(
+    `
+    SELECT COALESCE(SUM(amount_cents), 0) AS total
+    FROM wallet_transactions
+    WHERE user_id = $1
+      AND transaction_type = 'deposit'
+      AND created_at >= NOW() - INTERVAL '24 hours'`,
+    [userId],
+  );
+
+  let totalDeposited = Number(result.rows[0].total);
+  if (totalDeposited + amountCents > MAX_DAILY_DEPOSIT_CENTS) {
+    throw new DepositLimitExceededError();
+  }
+}
+
 module.exports = {
   getUserBalance,
   getUserTransactions,
@@ -179,4 +199,5 @@ module.exports = {
   chargeBet,
   processPayout,
   processRefund,
+  validateDepositAmount,
 };
