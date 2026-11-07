@@ -7,41 +7,35 @@
 </div>
 
 <div class="games">
-  <% if (gamesGroups.length === 0) { %>
-    <p>No games available at this time!</p>
+  <% if (weeks.length === 0) { %>
+    <p class="wrap">No games available at this time.</p>
   <% } %>
 
-  <% gamesGroups.forEach(group => { %>
+  <% weeks.forEach(week => { %>
     <div class="group wrap">
       <div class="group-head">
-        <h2><%= group.group %></h2>
+        <h2><%= week.name %></h2>
         <span class="muted">Game times shown in EDT.</span>
       </div>
 
       <div class="group-games-grid">
-        <% group.games.forEach(game => { %>
+        <% week.games.forEach(game => { %>
           <div class="game-card">
             <div class="game-card-head">
               <h3><%= game.away.abbreviation %> @ <%= game.home.abbreviation %></h3>
-              <span class="muted"><%= new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(game.date).replaceAll(',', ' @') %></span>
+              <span class="muted"><%= game.timeLabel %></span>
             </div>
 
-            <% game.markets?.slice(0,2).forEach(market => { %>
+            <% [game.away, game.home].forEach(team => { %>
               <div class="game-card-market">
-                <div class="game-card-market-head">
-                  <img src="" class="market-logo">
-                  <div class="market-details">
-                    <div>
-                      <span><%= market.question %></span>
-                      <!-- <span class="muted">(<%= game.away.wins %> - <%= game.away.losses %>)</span> -->
-                    </div>
-                    <div class="progress" style="background: <%= market.color %>; width: <%= market.yes %>%"></div>
-                  </div>  
+                <div class="market-logo"></div>
+                <div class="market-details">
+                  <span><%= team.name %></span>
+                  <progress class="progress" value="<%= team.chance %>" max="100" style="--bar-color: <%= team.color %>"></progress>
                 </div>
-                <button class="yes"><%= market.yes %>%</button>
+                <button class="yes"><%= team.chance %>%</button>
               </div>
             <% }); %>
-
           </div>
         <% }); %>
       </div>
