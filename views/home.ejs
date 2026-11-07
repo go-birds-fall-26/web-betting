@@ -1,2 +1,56 @@
-<h1>Home</h1>
-<p>home page content</p>
+<div class="hero">
+  <div class="wrap">
+    <h1>NFL prediction market</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <a class="button" href="/register">Sign up</a>
+  </div>
+</div>
+
+<div class="games">
+  <% if (gamesGroups.length === 0) { %>
+    <p>No games available at this time!</p>
+  <% } %>
+
+  <% gamesGroups.forEach(group => { %>
+    <div class="group wrap">
+      <div class="group-head">
+        <h2><%= group.group %></h2>
+        <span class="muted">Game times shown in EDT.</span>
+      </div>
+
+      <div class="group-games-grid">
+        <% group.games.forEach(game => { %>
+          <div class="game-card">
+            <div class="game-card-head">
+              <h3><%= game.away.abbreviation %> @ <%= game.home.abbreviation %></h3>
+              <span class="muted"><%= new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(game.date).replaceAll(',', ' @') %></span>
+            </div>
+
+            <% game.markets?.slice(0,2).forEach(market => { %>
+              <div class="game-card-market">
+                <div class="game-card-market-head">
+                  <img src="" class="market-logo">
+                  <div class="market-details">
+                    <div>
+                      <span><%= market.question %></span>
+                      <!-- <span class="muted">(<%= game.away.wins %> - <%= game.away.losses %>)</span> -->
+                    </div>
+                    <div class="progress" style="background: <%= market.color %>; width: <%= market.yes %>%"></div>
+                  </div>  
+                </div>
+                <button class="yes"><%= market.yes %>%</button>
+              </div>
+            <% }); %>
+
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  <% }); %>
+</div>
+
+<div class="third">
+  <div class="wrap">
+    idk some more content here
+  </div>
+</div>
