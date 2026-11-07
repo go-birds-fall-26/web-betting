@@ -6,7 +6,8 @@
     "express-ejs-layouts": "^2.5.1",
     "node-cron": "^4.6.0",
     "pg": "^8.23.1",
-    "stripe": "^23.1.0"
+    "stripe": "^23.1.0",
+    "argon2": "^0.45.2"
   },
   "devDependencies": {
     "concurrently": "^10.0.6",
