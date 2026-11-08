@@ -17,6 +17,14 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
+  if (
+    !req.body ||
+    typeof req.body.email !== "string" || 
+    typeof req.body.password !== "string"
+  ) {
+    return res.status(400).json({ error: "Invalid request" });
+  }
+
   try {
     let email = req.body.email;
     let password = req.body.password;
@@ -39,6 +47,16 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
+  if (
+    !req.body ||
+    typeof req.body.first_name !== "string" ||
+    typeof req.body.last_name !== "string" ||
+    typeof req.body.email !== "string" || 
+    typeof req.body.password !== "string"
+  ) {
+    return res.status(400).json({ error: "Invalid request" });
+  }
+
   try {
     let firstName = req.body.first_name;
     let lastName = req.body.last_name;
