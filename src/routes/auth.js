@@ -26,7 +26,7 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    let email = req.body.email;
+    let email = req.body.email; // TODO: make case-insensitive
     let password = req.body.password;
     await validateLoginCredentials(email, password);
     return res.redirect('/');
@@ -60,7 +60,7 @@ router.post('/register', async (req, res) => {
   try {
     let firstName = req.body.first_name;
     let lastName = req.body.last_name;
-    let email = req.body.email;
+    let email = req.body.email; // TODO: make case-insensitive
     let passwordHash = await hash(req.body.password);
 
     await createUser(firstName, lastName, email, passwordHash);
