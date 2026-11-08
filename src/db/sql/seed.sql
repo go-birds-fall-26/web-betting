@@ -64,6 +64,16 @@ CREATE TABLE IF NOT EXISTS wallet_transactions (
   bet_id INTEGER NULL REFERENCES bets(id)
 );
 
+-- Dev seed: week 10 games from the Markets sketches (real ESPN IDs)
+INSERT INTO events(espn_game_id, home_team_id, home_team_name, away_team_id, away_team_name, start_time)
+VALUES
+  ('401873052', '19', 'Giants',  '28', 'Commanders', '2026-11-13T01:15Z'),
+  ('401873053', '8',  'Lions',   '17', 'Patriots',   '2026-11-15T14:30Z'),
+  ('401873058', '1',  'Falcons', '12', 'Chiefs',     '2026-11-15T18:00Z'),
+  ('401873056', '5',  'Browns',  '34', 'Texans',     '2026-11-15T18:00Z'),
+  ('401873060', '9',  'Packers', '16', 'Vikings',    '2026-11-15T18:00Z')
+ON CONFLICT (espn_game_id) DO NOTHING;
+
 -- Development/Test User
 INSERT INTO users (first_name, last_name, email, password_hash, balance_cents)
 VALUES ('Test', 'User', 'test_user@example.com', 'placeholder_hash', 0)
