@@ -1,6 +1,5 @@
 const argon2 = require('argon2');
-
-// TODO: validate input to hash is a string
+const AppError = require('./AppError');
 
 async function hash(password) {
   let hashedString;
@@ -8,7 +7,7 @@ async function hash(password) {
   try {
     hashedString = await argon2.hash(password);
   } catch (error) {
-    console.error(error); // TODO: Handle argon2 error appropriately
+    throw new AppError(error);
   }
 
   return hashedString;
@@ -20,7 +19,7 @@ async function verify(passwordHash, password) {
   try {
     isValid = await argon2.verify(passwordHash, password);
   } catch (error) {
-    console.error(error); // TODO: Handle argon2 error appropriately
+    throw new AppError(error);
   }
 
   return isValid;
