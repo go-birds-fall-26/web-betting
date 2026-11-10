@@ -46,7 +46,7 @@ In rough order. "Depends on" means it needs that step done first.
 | 4 | Store team leaders | 3, plus a decision on where players live | Read from the scoreboard (see ESPN notes). Never delete players because a list came back empty. |
 | 5 | Roster JSON route + `fetch()` | 2, 4 | `GET /markets/teams/:teamId/roster` returns `res.json(...)`. Ignore a response if the team dropdown changed while it was loading. Show a message if the request fails. |
 | 6 | Bet type dropdown, show/hide fields | 2 | Describe each bet type's needed fields (player, number, over/under) as data in one object, not separate `if`s. These choices will become `markets.template` and `markets.params`. |
-| 7 | Price display and Buy | pricing decisions | **Blocked.** Price comes from the server. The Buy route must re-check everything server-side. |
+| 7 | Price display and Buy | 6 | Price comes from the server, using the formula and fees in the README's [How prices work](../README.md#how-prices-work) and [How a bet pays out](../README.md#how-a-bet-pays-out). The Buy route must re-check everything server-side. |
 
 ### 4. ESPN Notes
 
