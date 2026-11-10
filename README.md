@@ -6,7 +6,7 @@ A mock prediction market for NFL games, in the spirit of [Kalshi](https://kalshi
 
 > **Status:** in development. Wallet balances, Stripe test deposits, the ESPN settlement check, and the games/markets/bets data model are in. Bet placement, the Markets page, pricing, and login are in progress. See [docs/MARKETS.md](docs/MARKETS.md) for the Markets page plan.
 >
-> **Deadlines:** every [contract](#contract) feature done by **Sat Dec 5, 11:59 PM**. Finals week is buffer only: polish done by **Thu Dec 10**, demo in our final exam slot on **Fri Dec 11** (morning).
+> **Deadlines:** every [contract](#contract) feature done by **Sat Dec 5, 11:59 PM**. Finals week is buffer only: polish done by **Thu Dec 10**, demo in our final exam slot on **Fri Dec 11** (morning). See the [roadmap](docs/ROADMAP.md) for who's doing what each week.
 
 ## Getting started
 
