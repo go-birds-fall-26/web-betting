@@ -5,6 +5,8 @@ CS 375 Group Project | Fall '26
 A mock prediction market for NFL games, in the spirit of [Kalshi](https://kalshi.com). Users sign up, load their account with fake money, and buy Yes or No contracts on questions about real NFL games (for example, "Team X wins game Y"). When the real game finishes, the app checks the result against ESPN's data and settles every bet. No real money is ever involved.
 
 > **Status:** in development. Wallet balances, Stripe test deposits, the ESPN settlement check, and the games/markets/bets data model are in. Bet placement, the Markets page, pricing, and login are in progress. See [docs/MARKETS.md](docs/MARKETS.md) for the Markets page plan.
+>
+> **Deadlines:** every [contract](#contract) feature done by **Sat Dec 5, 11:59 PM**. Finals week is buffer only: polish done by **Thu Dec 10**, demo in our final exam slot on **Fri Dec 11** (morning).
 
 ## Getting started
 
@@ -25,19 +27,20 @@ Stripe deposits are optional. See the [Stripe Setup Guide](docs/STRIPE.md) for s
 
 - **Game:** a real NFL game. (The database table is still named `events`.)
 - **Market:** a Yes/No question about a game, e.g. "Will the Giants beat the Commanders?" A game can have many markets.
+- **Default market:** every game has one "home team wins" market, created automatically when the game enters our system. Yes means the home team (`home_team_id`) wins. ESPN designates a home team even for neutral-site games (e.g. the Madrid and Munich games), so every game has one.
 - **Bet:** a purchase of contracts in a market, e.g. 50 Yes contracts at 35¢, or 10 No contracts at 80¢. A market can have many bets.
 
 ## What it does
 
 - **Accounts:** sign up, log in, and keep a balance. Until login exists, `DEV_USER_ID` in `.env` acts as the logged-in user.
 - **Fake money:** deposits go through the [Stripe](https://stripe.com/docs/testing) API in test mode, so users can add "paper money" without any real banking. Withdrawals are mocked: they only decrement the user's balance. Bets are paid for from this balance, and winnings are paid back into it.
-- **Markets:** users pick a game and a bet template ("I want to bet on game X for outcome Y"). The default bet is "Team X wins game Y," and it is the first one being built. Bets fall into three kinds:
+- **Markets:** users pick a game and a bet template ("I want to bet on game X for outcome Y"). The default bet, "Team X wins game Y," is built first. Users can pick either team: the app maps that choice onto the game's one [default market](#terminology) (picking the home team buys Yes, picking the away team buys No). Bets fall into three kinds:
   - **Match:** stats across both teams, e.g. total points scored in the game.
   - **Team:** one team's stats, e.g. this team scores N points.
   - **Player:** one player's stats, e.g. this player scores N touchdowns. For now, users can only bet on each team's passing, rushing, and receiving leaders as listed in ESPN's response.
 
-  Every market must be settleable automatically from ESPN's data.
-- **The house:** the app is the counterparty to every contract. Users can cash out before the game ends by selling their contracts back to the house.
+  Number bets (team points, player stats) are **over/under on a single number**, e.g. "Commanders score over 14 points," not ranges. They're part of the contract and come after the default bet. Every market must be settleable automatically from ESPN's data.
+- **The house:** the app is the counterparty to every contract. Users can cash out before the game ends by selling their contracts back to the house (a [stretch goal](#stretch-goals)).
 - **Pricing:** the house does not set odds. Prices are driven by how many Yes and No contracts users have bought (see [How prices work](#how-prices-work)).
 - **Search and history:** users can search for games and see every bet they've placed, won, and lost.
 - **Settlement:** a scheduled check (`node-cron`, every 5 minutes by default via `DEFAULT_CRON`) asks ESPN whether each game is still active. If it is, nothing happens. If it's over, the app closes its markets and pays the winners. The same check also runs whenever someone tries to place a bet, so no one can bet on a game that has ended.
@@ -74,7 +77,7 @@ With `k = 10`:
 - Every contract resolves to **$1.00** if it wins and **$0** if it loses. If you lose, the money you put in is gone.
 - Your payout depends on the price you paid when you bought, not on where the price goes afterward. Example: you buy 2 Yes contracts at 50¢ ($1.00 total). If Yes wins, you get $2.00 back, a $1.00 profit. If more people buy Yes after you, the price of Yes rises, so your contracts are worth more if you cash out early.
 - After you buy, the market price can go up, go down, or stay the same. If it goes down, you can either cash out now at the current price (taking a loss) or hold until the market resolves to $0 or $1.
-- **Cash-out price:** the house pays the current market price, minus a fee.
+- **Cash-out price** ([stretch goal](#stretch-goals)): the house pays the current market price, minus a fee.
 - **Fees:** a fee is charged when buying and when cashing out. No fee is taken when a contract is held until it resolves. The formula is modeled on Kalshi's trading fee:
 
   `fee = ceil(0.07 × C × P × (1 − P))`
@@ -87,7 +90,8 @@ With `k = 10`:
   So buying does `balance -= C × P + fee(C, P)`, and cashing out does `balance += C × P − fee(C, P)`. Example: buy 10 Yes at $0.50 and pay $5.18 ($5.00 + $0.18 fee). If the price rises to $0.70 and you cash out, you get $6.85 ($7.00 − $0.15 fee), a $1.67 profit. If you hold and Yes wins, you get $10.00 with no fee, a $4.82 profit.
 - **Ties:** if a game ends in a tie, the market resolves at $0.50 for both Yes and No.
 - **Cancelled games:** all contracts are voided and users get their purchase price back. Fees already paid are kept.
-- **When markets open:** a game's markets can open as soon as the matchup is announced. The regular-season schedule is already out, so markets can be created right away.
+- **When markets open:** games are available at least two NFL weeks ahead. Once NFL week 10 starts, weeks 11 and 12 are open; once week 11 starts, week 13 is pulled in.
+- **When markets close:** betting stays open while a game is live and closes once the game is final.
 
 ## Scope
 
@@ -104,7 +108,7 @@ With `k = 10`:
 - [`node-cron`](https://www.npmjs.com/package/node-cron) for the settlement check
 - [Stripe](https://docs.stripe.com/testing) in test mode for deposits
 - Vanilla HTML, CSS, and client-side JavaScript. The course does not allow front-end frameworks like React, Angular, or Vue.
-- Deployed to the public internet (host not chosen yet)
+- Deployed to the public internet (host chosen in week 11)
 
 Planned:
 
@@ -112,13 +116,36 @@ Planned:
 - **Testing:** the real ESPN API is awkward to test against, so we'll save sample responses and serve them from a fake version of the API.
 - **Environments:** branch on `process.env.NODE_ENV === "production"`, with a `package.json` script that sets `NODE_ENV` before starting.
 
+## Contract
+
+The feature checklist we agreed on with our instructor. It's what the project is graded against, and it can still change.
+
+- [ ] Deployment
+- [ ] User accounts
+- [ ] Users can create bets, select from hardcoded set of events (e.g. player X gets Y touchdowns in game Z)
+  - [ ] Events should be verifiable automatically via some sports API
+  - [ ] Can create more sophisticated events (e.g. between 5-9 touchdowns)
+  - [ ] Some way of calculating price (ala prediction markets, based on other peoples' bets) or calculating odds (ala some formula)
+  - [ ] Some way of knowing when bet is over and awarding winners
+- [x] Users can add $ to account which is spent when they place bets and deposited into when they win, uses Stripe API
+- [ ] Users can search for bets, and see all bets they've created/placed/won/lost
+- [x] LLM: Minimal LLM usage, mainly on planning/debugging, line-by-line codegen/autocomplete but not generating a whole file, test generation
+
+We plan to meet "more sophisticated events" with over/under bets on team points and player stats (see [What it does](#what-it-does)).
+
 ## Open questions
 
 The team is still deciding the following. Treat them as unresolved, not as assumptions to build on.
 
-- **Player storage:** where player data lives in the database (see [docs/MARKETS.md](docs/MARKETS.md)).
-- **Hosting:** which provider we deploy to.
-- **Feature list:** the course contract is still being refined. A formal feature list will be added when it exists.
+- **Player storage:** where player data lives in the database (see [docs/MARKETS.md](docs/MARKETS.md)). Settled as part of the work that stores team leaders.
+- **Hosting:** which provider we deploy to. Decided in week 11 (Nov 29 – Dec 5).
+
+## Stretch goals
+
+Not in the contract. Build these only once the contract features work:
+
+- **Cash-out:** selling contracts back to the house before the game ends, with the fee described in [How a bet pays out](#how-a-bet-pays-out).
+- **Synthetic activity:** seeding the database and simulating other users with generated data (e.g. Faker.js) so the market has traffic and prices move.
 
 ## Deferred
 
@@ -126,9 +153,8 @@ Ideas we've agreed to come back to after basic functionality works:
 
 - **Injury deadlines:** what's the latest point at which teams must declare injuries? This would tell us which players are confirmed to play, and so which players users can bet on. For now, player bets are limited to the passing, rushing, and receiving leaders in ESPN's response.
 - **Price movement during a fill:** in a real market, a large order consumes the cheapest contracts first, so the price rises as it fills. Our orders fill at one price for now.
-- **Synthetic activity:** seeding the database and simulating other users with generated data (e.g. Faker.js) so the market has traffic.
 - **User-to-user trading:** letting users sell contracts to each other instead of only to the house.
-- **More sophisticated markets:** e.g. a player scoring between 5 and 9 touchdowns.
+- **Prices during live games:** prices only move when users buy, so late in a lopsided game a market can still sit near 50¢ even though the result is nearly certain. Known limitation, not a bug.
 
 ## LLM usage
 
