@@ -4,6 +4,16 @@ The Markets page is where a user picks what to bet on: a game, then a team, then
 
 **Status:** in progress. The route and seed data exist; the page itself isn't written yet, so `/markets` returns a 500 for now.
 
+### User Flow
+
+The current idea, not a fixed design. Change it as we build, and update this list when you do.
+
+1. **Pick a game** from a dropdown of games open for betting, shown away team first ("Commanders vs. Giants").
+2. **Pick one of its two teams.**
+3. **Pick a bet type:** the team wins, the team's points, or a player's stat.
+4. **Fill in what that bet type needs.** A win bet needs nothing more. A points bet needs a number and over/under. A player bet needs a player (from that team's leaders), a stat, a number, and over/under.
+5. **See the price per contract** (from the server), enter how many contracts, see the total cost including the fee, and **Buy**.
+
 ### 1. What's Built
 
 | File | What it does |
@@ -35,7 +45,7 @@ ESPN ──(sync job, not built)──► events table ──► GET /markets �
 - **Games and teams are sent with the page.** Each game `<option>` carries its team IDs and names in `data-` attributes, so picking a game fills the team dropdown without a request.
 - **Players are fetched.** Picking a team calls a JSON route for that team's players. Starting with each team's passing, rushing, and receiving leaders, with room to grow to full rosters.
 - **Option values use `events.id`**, our own ID, not the ESPN one, because `markets.event_id` references `events.id`. Team IDs in `events` are ESPN IDs, which is what the roster route needs.
-- **Display order is away team first** ("Commanders vs. Giants" means WSH @ NYG), to match the sketches. So the default market's Yes side is the **second** team named.
+- **Display order is away team first** ("Commanders vs. Giants" means WSH @ NYG). So the default market's Yes side is the **second** team named.
 
 ### 3. Next Steps
 
@@ -78,7 +88,7 @@ Things that will trip you up:
 
 ### 5. Open Questions for the Team
 
-- **Team names:** short ("Commanders") or full ("Washington Commanders") in `events`? The seed uses short names to match the sketches.
+- **Team names:** short ("Commanders") or full ("Washington Commanders") in `events`? The seed uses short names.
 - **Where do players live?** Separate `teams` and `players` tables, or the player ID inside `markets.params`? Decided by whoever takes step 4.
 
 Settled: games open at least two NFL weeks ahead and stay open until final; each game has one "home team wins" default market; the win bet ships first, then over/under team-points and player bets. `events` has no `week` column, so the sync job decides which weeks to load.

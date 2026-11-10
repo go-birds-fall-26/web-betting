@@ -107,6 +107,7 @@ With `k = 10`:
 - PostgreSQL through [`pg`](https://node-postgres.com/)
 - [`node-cron`](https://www.npmjs.com/package/node-cron) for the settlement check
 - [Stripe](https://docs.stripe.com/testing) in test mode for deposits
+- Money is stored and calculated in **integer cents** (the `*_cents` columns, `src/utils/money.js`), never floating-point dollars. Prices are whole cents from 1 to 99.
 - Vanilla HTML, CSS, and client-side JavaScript. The course does not allow front-end frameworks like React, Angular, or Vue.
 - Deployed to the public internet (host chosen in week 11)
 
@@ -139,6 +140,7 @@ The team is still deciding the following. Treat them as unresolved, not as assum
 
 - **Player storage:** where player data lives in the database (see [docs/MARKETS.md](docs/MARKETS.md)). Settled as part of the work that stores team leaders.
 - **Hosting:** which provider we deploy to. Decided in week 11 (Nov 29 – Dec 5).
+- **Landing exactly on the number:** what happens to an over/under bet when the result equals the number (e.g. "Commanders over 14 points" and they score exactly 14)? Options include half numbers like 14.5 so it can't happen, or a rule for that case. Needed before over/under bets settle ([#30](https://github.com/go-birds-fall-26/web-betting/issues/30)).
 
 ## Stretch goals
 
@@ -159,6 +161,19 @@ Ideas we've agreed to come back to after basic functionality works:
 ## LLM usage
 
 Our group uses LLMs minimally: brainstorming and research, and autofill for syntax in languages some of us are less familiar with (JavaScript is new for some members). We do not use LLMs to generate whole files. The full LLM policy for our group is in [AGENTS.md](AGENTS.md).
+
+## Team
+
+| Name | GitHub | Git author names |
+|---|---|---|
+| Abdul Chaudhry | [@Abdulc123](https://github.com/Abdulc123) | Abdul Chaudhry |
+| Alex Sparks-Bakota | [@alexsparksbakota](https://github.com/alexsparksbakota) | Alex Sparks-Bakota |
+| Evan Trinh | [@evantrinh](https://github.com/evantrinh) | Evan T., Evan Trinh |
+| Kennan Lu | [@kennanLu](https://github.com/kennanLu) | kennanLu |
+| Nicolas Plaia | [@nicolasplaia](https://github.com/nicolasplaia) | Nicolas Plaia |
+| Ryan Fitzpatrick | [@rfitzpatrick517](https://github.com/rfitzpatrick517) | Ryan Fitzpatrick, rfitzpatrick517 |
+
+Each progress report lists who's behind every git author name. To see them all: `git log --all --format='%an' | sort -u`.
 
 ## Course context
 

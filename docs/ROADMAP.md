@@ -6,6 +6,8 @@ How we get from here to a finished, deployed project by **Sat Dec 5**, with ever
 
 ### 1. How We Work
 
+**Weekly rhythm:** we meet Monday in class for the check-in with our instructor (everyone attends; if you can't, email the instructor beforehand). Day-to-day chat happens in Discord, and who's doing what lives on the board. The progress report is due **Saturday 11:59 PM**.
+
 1. **Pick a task.** Find an unassigned issue in your week's milestone on the [Kanban board](https://github.com/orgs/go-birds-fall-26/projects/1). Assign yourself and move it to **In progress**. If it's assigned to someone else, it's theirs: ask before touching it.
 2. **One issue, one branch, one PR.** Put `Closes #N` in the PR description so the issue closes when the PR merges.
 3. **Check the "Touches" column** before you start. If a file you need is listed under someone else's task the same week, message them first (see [Shared Files](#4-shared-files)).
@@ -16,12 +18,19 @@ How we get from here to a finished, deployed project by **Sat Dec 5**, with ever
 
 Your issues for the week are most of your progress report. LLM use follows [AGENTS.md](../AGENTS.md).
 
+**Progress report tips** (from the course's report instructions):
+
+- Everyone is expected to commit **JavaScript** regularly, not just HTML/CSS or design docs.
+- **Pair programming?** List the commit hashes you worked on but didn't author, so you aren't penalized for fewer commits.
+- **Non-code work** (research, design notes): include evidence of it in the report.
+- `npm install` doesn't count as a contribution. Only commits made that Sunday through Saturday count.
+
 ### 2. Milestones
 
 | Milestone | Dates | Done when |
 |---|---|---|
-| Week 8 | Sun Nov 8 – **Sat Nov 14** | Real NFL games show up in the Markets dropdowns. Pricing, the fake ESPN API, and default markets are merged. Login works. |
-| Week 9 | Sun Nov 15 – **Sat Nov 21** | A logged-in user bets on "team X wins" for a real game, the bet settles against the fake ESPN API, and the winner gets paid. They can see the bet in their history. |
+| Week 08 | Sun Nov 8 – **Sat Nov 14** | Real NFL games show up in the Markets dropdowns. Pricing, the fake ESPN API, and default markets are merged. Login works. |
+| Week 09 | Sun Nov 15 – **Sat Nov 21** | A logged-in user bets on "team X wins" for a real game, the bet settles against the fake ESPN API, and the winner gets paid. They can see the bet in their history. |
 | Week 10 | Nov 22 – 28 | Thanksgiving. No planned work; catch up or get ahead. Counts toward the week 11 report. |
 | Week 11 | Sun Nov 29 – **Sat Dec 5** | Every [contract](../README.md#contract) item is done: over/under team-points and player bets, search, and a deployed site. |
 | Finals | Sun Dec 6 – **Thu Dec 10** | Buffer only: bug fixes, polish, demo rehearsal, contract review PDF. Demo is **Fri Dec 11** (morning). |
@@ -30,7 +39,7 @@ Your issues for the week are most of your progress report. LLM use follows [AGEN
 
 Sizes assume about 5 hours a week per person (from our proposal): **S** is a few hours, **M** is about a week's worth. "Touches" lists the main files, so overlaps are visible up front. File names for new code are suggestions.
 
-#### Week 8: Real games and building blocks
+#### Week 08: Real games and building blocks
 
 Short week: the plan is going out on Tuesday, and Abdul is away from Thursday.
 
@@ -44,7 +53,7 @@ Short week: the plan is going out on Tuesday, and Abdul is away from Thursday.
 | Merge the home page UI (rebase on main first) | PR #10 | Evan | S | — | `views/home.ejs`, `views/layout.ejs`, `views/partials/nav.ejs`, `public/css/styles.css` |
 | Get registration and login reviewed and merged, then start sessions | #4 / PR #13, #16 | Kennan | M | — | `src/routes/auth.js`, `src/services/users.js`, auth views |
 
-#### Week 9: First bet, start to finish
+#### Week 09: First bet, start to finish
 
 | Work item | Issue | Suggested owner | Size | Depends on | Touches |
 |---|---|---|---|---|---|

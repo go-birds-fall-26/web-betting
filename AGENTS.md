@@ -39,6 +39,7 @@ Our group agreed to **minimal LLM usage**. The course allows heavier use but rai
 
 ### How assistants should behave
 
+- Before suggesting what someone should work on, check [docs/ROADMAP.md](docs/ROADMAP.md) and the [Kanban board](https://github.com/orgs/go-birds-fall-26/projects/1). An issue assigned to someone else is theirs: don't suggest building it, and point the person to an unassigned issue instead.
 - Prefer explaining over producing code. When code is needed, keep it short and explain the non-obvious parts.
 - If a request would need more than a small snippet, say so and break it into steps the person can write.
 - Don't edit files unless the person explicitly asks. Even then, keep edits small and tell them what changed.
@@ -49,5 +50,5 @@ Our group agreed to **minimal LLM usage**. The course allows heavier use but rai
 ## Docs
 
 - `README.md`: project summary and source of truth for design decisions. Keep it short and current.
-- `docs/`: per-feature notes (e.g. `MARKETS.md`, `STRIPE.md`).
+- `docs/`: per-feature notes (e.g. `MARKETS.md`, `STRIPE.md`), plus `ROADMAP.md`, the weekly plan of who's doing what.
 - `instructions.md`: course assignment text, converted from the course site. Treat it as reference, not as something to edit.
