@@ -1,52 +1,151 @@
-<h1>My Account</h1>
+<div class="page-head">
+  <div class="wrap">
+    <h1>Account</h1>
+  </div>
+</div>
 
-<h2> Information </h2>
-<p>
-    Name: <%= user.first_name %>
-        <%= user.last_name %>
-</p>
-<p> Email: <%= user.email %>
-</p>
-<p>
-    Balance: <%= formatAmountCents(user.balance_cents) %>
-</p>
+<div class="wrap account">
+  <aside class="account-nav">
+    <!-- <div class="avatar"></div> -->
+    <p class="account-name"><%= user.first_name %> <%= user.last_name %></p>
+    <nav>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#wallet">Wallet</a>
+      <a href="#information">Information</a>
+    </nav>
+  </aside>
 
-<form action="/account/deposit" method="POST">
-    <input type="number" name="amount" step="0.01" required>
-    <button type="submit"> Deposit</button>
-</form>
+  <div class="account-content">
 
-<form action="/account/withdraw" method="POST">
-    <input type="number" name="amount" step="0.01" required>
-    <button type="submit"> Withdraw</button>
-</form>
+    <section id="portfolio" class="account-section">
+      <div class="group-head">
+        <h2>Portfolio</h2>
+      </div>
 
-<h2> Transaction History </h2>
-<table border="1">
-    <thead>
-        <tr>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Balance After</th>
-            <th>Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% transactions.forEach(transaction=> { %>
+      <div class="stats">
+        <div class="stat">
+          <span class="muted">Cash</span>
+          <strong><%= formatAmountCents(user.balance_cents) %></strong>
+        </div>
+        <div class="stat">
+          <span class="muted">In open positions</span>
+          <strong><%= formatAmountCents(portfolio.summary.inPositionsCents) %></strong>
+        </div>
+        <div class="stat">
+          <span class="muted">Total profit</span>
+          <strong class="<%= portfolio.summary.profitCents >= 0 ? 'positive' : 'negative' %>"><%= formatAmountCents(portfolio.summary.profitCents) %></strong>
+        </div>
+        <div class="stat">
+          <span class="muted">Win rate</span>
+          <strong><%= portfolio.summary.winRate %>%</strong>
+        </div>
+      </div>
+
+      <div id="value-chart" class="chart" data-points="<%= JSON.stringify(portfolio.valueHistory) %>"></div>
+
+      <div data-tabs>
+        <div class="tabs">
+          <% portfolio.tabs.forEach((tab, index) => { %>
+            <button class="tab" data-tab="<%= tab.id %>" aria-selected="<%= index === 0 %>">
+              <%= tab.name %> (<%= tab.positions.length %>)
+            </button>
+          <% }); %>
+        </div>
+
+        <% portfolio.tabs.forEach((tab, index) => { %>
+          <div data-panel="<%= tab.id %>" <%= index === 0 ? '' : 'hidden' %>>
+            <% if (tab.positions.length === 0) { %>
+              <p class="muted">Nothing here yet.</p>
+            <% } else { %>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Event</th>
+                    <th>Side</th>
+                    <th>Contracts</th>
+                    <th>Avg price</th>
+                    <th>Profit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% tab.positions.forEach(position => { %>
+                    <tr>
+                      <td><%= position.event %></td>
+                      <td><%= position.side %></td>
+                      <td><%= position.contracts %></td>
+                      <td><%= position.avgPriceCents %>¢</td>
+                      <td class="<%= position.profitCents >= 0 ? 'positive' : 'negative' %>"><%= formatAmountCents(position.profitCents) %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            <% } %>
+          </div>
+        <% }); %>
+      </div>
+    </section>
+
+    <section id="wallet" class="account-section">
+      <div class="group-head">
+        <h2>Wallet</h2>
+        <span class="muted">Balance: <%= formatAmountCents(user.balance_cents) %></span>
+      </div>
+
+      <div class="wallet-forms">
+        <form action="/account/deposit" method="POST">
+          <h3>Deposit</h3>
+          <input type="number" name="amount" step="0.01" min="0.01" placeholder="Amount in dollars" required>
+          <button class="button" type="submit">Deposit</button>
+        </form>
+
+        <form action="/account/withdraw" method="POST">
+          <h3>Withdraw</h3>
+          <input type="number" name="amount" step="0.01" min="0.01" placeholder="Amount in dollars" required>
+          <button class="button" type="submit">Withdraw</button>
+        </form>
+      </div>
+
+      <h3>Transaction history</h3>
+      <% if (transactions.length === 0) { %>
+        <p class="muted">No transactions yet.</p>
+      <% } else { %>
+        <table class="table">
+          <thead>
             <tr>
-                <td>
-                    <%= transaction.transaction_type %>
-                </td>
-                <td>
-                    <%= formatAmountCents(transaction.amount_cents) %>
-                </td>
-                <td>
-                    <%= formatAmountCents(transaction.balance_after_cents) %>
-                </td>
-                <td>
-                    <%= new Date(transaction.created_at).toLocaleString() %>
-                </td>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Balance after</th>
+              <th>Date</th>
             </tr>
-            <% }) %>
-    </tbody>
-</table>
+          </thead>
+          <tbody>
+            <% transactions.forEach(transaction => { %>
+              <tr>
+                <td><%= transaction.transaction_type %></td>
+                <td><%= formatAmountCents(transaction.amount_cents) %></td>
+                <td><%= formatAmountCents(transaction.balance_after_cents) %></td>
+                <td><%= new Date(transaction.created_at).toLocaleString() %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </section>
+
+    <section id="information" class="account-section">
+      <div class="group-head">
+        <h2>Information</h2>
+      </div>
+
+      <dl class="info">
+        <dt class="muted">Name</dt>
+        <dd><%= user.first_name %> <%= user.last_name %></dd>
+        <dt class="muted">Email</dt>
+        <dd><%= user.email %></dd>
+      </dl>
+    </section>
+
+  </div>
+</div>
+
+<script type="module" src="/js/account.js"></script>
