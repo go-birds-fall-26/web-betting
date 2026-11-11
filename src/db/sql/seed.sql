@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS wallet_transactions (
   bet_id INTEGER NULL REFERENCES bets(id)
 );
 
--- Dev seed: week 10 games from the Markets sketches (real ESPN IDs)
+-- Dev seed: five NFL week 10 games (real ESPN IDs)
 INSERT INTO events(espn_game_id, home_team_id, home_team_name, away_team_id, away_team_name, start_time)
 VALUES
   ('401873052', '19', 'Giants',  '28', 'Commanders', '2026-11-13T01:15Z'),
