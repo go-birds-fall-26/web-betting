@@ -3,39 +3,22 @@ const path = require("node:path");
 const fs = require("node:fs/promises");
 const validator = require("validator");
 
-const TestDir = path.join(__dirname, "../test/fixtures/espn");
-const EventCategories = Object.freeze({
-  GAME_WINNERS: "game-winners",
-});
-const ValidCategories = new Set(Object.values(EventCategories));
+const TestDir = path.join(__dirname, "../test/mocks/espn");
 
-router.get("/game-winners", async (req, res) => {
+router.get("/summary", (req, res) => {
   let { event } = req.query;
-
   if (typeof event !== "string" || !validator.isInt(event)) {
     return res.status(400).json({
       error: "Event ID must be a positive integer",
     });
   }
 
-  let filePath = path.join(
-    TestDir,
-    EventCategories.GAME_WINNERS,
-    `${event}.json`,
-  );
+  let filePath = path.join(TestDir, "summary", `${event}.json`);
   return sendFile(res, filePath);
 });
 
-router.get("/scenarios", async (req, res) => {
-  let { category } = req.query;
-  let isValid = typeof category === "string" && ValidCategories.has(category);
-
-  if (!isValid) {
-    return res.status(400).json({
-      error: `Invalid Category. Must be one of : ${[...ValidCategories].join(",")} `,
-    });
-  }
-  let filePath = path.join(TestDir, "scenarios", `${category}.json`);
+router.get("/scenarios", (req, res) => {
+  let filePath = path.join(TestDir, "scenarios", `summary.json`);
   return sendFile(res, filePath);
 });
 

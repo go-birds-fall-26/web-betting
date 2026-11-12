@@ -16,7 +16,9 @@
             "score": "0",
             "winner": null,
             "team": {
-              "id": "6"
+              "id": "6",
+              "displayName": "Dallas Cowboys",
+              "abbreviation": "DAL"
             }
           },
           {
@@ -24,7 +26,9 @@
             "score": "0",
             "winner": null,
             "team": {
-              "id": "21"
+              "id": "21",
+              "displayName": "Philadelphia Eagles",
+              "abbreviation": "PHI"
             }
           }
         ]
