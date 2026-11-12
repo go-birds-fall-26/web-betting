@@ -1,0 +1,34 @@
+{
+  "header": {
+    "id": "5",
+    "competitions": [
+      {
+        "status": {
+          "type": {
+            "name": "STATUS_IN_PROGRESS",
+            "state": "in",
+            "completed": false
+          }
+        },
+        "competitors": [
+          {
+            "homeAway": "home",
+            "score": "13",
+            "winner": null,
+            "team": {
+              "id": "6"
+            }
+          },
+          {
+            "homeAway": "away",
+            "score": "21",
+            "winner": null,
+            "team": {
+              "id": "21"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "header": {
+    "id": "2",
+    "competitions": [
+      {
+        "status": {
+          "type": {
+            "name": "STATUS_FINAL",
+            "state": "post",
+            "completed": true
+          }
+        },
+        "competitors": [
+          {
+            "homeAway": "home",
+            "score": "43",
+            "winner": true,
+            "team": {
+              "id": "6"
+            }
+          },
+          {
+            "homeAway": "away",
+            "score": "39",
+            "winner": false,
+            "team": {
+              "id": "21"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
