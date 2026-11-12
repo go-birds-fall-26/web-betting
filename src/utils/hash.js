@@ -1,5 +1,5 @@
 const argon2 = require('argon2');
-const AppError = require('./AppError');
+const AppError = require('../errors/AppError');
 
 async function hash(password) {
   let hashedString;

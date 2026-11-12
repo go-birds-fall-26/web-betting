@@ -5,7 +5,7 @@ const {
   getUserCredentialsByEmail
 } = require('../services/users');
 
-const { hash, verify } = require('../utils/cryptography');
+const { hash, verify } = require('../utils/hash');
 const { InvalidCredentialsError, EmailAlreadyTakenError } = require('../errors/UserErrors');
 
 router.get('/login', (req, res) => {
