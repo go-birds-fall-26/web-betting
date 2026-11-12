@@ -1,0 +1,38 @@
+{
+  "header": {
+    "id": "3",
+    "competitions": [
+      {
+        "status": {
+          "type": {
+            "name": "STATUS_FINAL",
+            "state": "post",
+            "completed": true
+          }
+        },
+        "competitors": [
+          {
+            "homeAway": "home",
+            "score": "67",
+            "winner": false,
+            "team": {
+              "id": "6",
+              "displayName": "Dallas Cowboys",
+              "abbreviation": "DAL"
+            }
+          },
+          {
+            "homeAway": "away",
+            "score": "67",
+            "winner": false,
+            "team": {
+              "id": "21",
+              "displayName": "Philadelphia Eagles",
+              "abbreviation": "PHI"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

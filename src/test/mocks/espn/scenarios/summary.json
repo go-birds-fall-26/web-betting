@@ -1,0 +1,49 @@
+{
+  "game-winners": [
+    {
+      "gameId": "1",
+      "description": "Away team wins",
+      "fixture": "test/mocks/espn/summary/1.json",
+      "expectedResult": {
+        "status": "final",
+        "winnerTeamId": "21"
+      }
+    },
+    {
+      "gameId": "2",
+      "description": "Home team wins",
+      "fixture": "test/mocks/espn/summary/2.json",
+      "expectedResult": {
+        "status": "final",
+        "winnerTeamId": "6"
+      }
+    },
+    {
+      "gameId": "3",
+      "description": "Game ends in a tie",
+      "fixture": "test/mocks/espn/summary/3.json",
+      "expectedResult": {
+        "status": "tie",
+        "winnerTeamId": null
+      }
+    },
+    {
+      "gameId": "4",
+      "description": "Game has not started",
+      "fixture": "test/mocks/espn/summary/4.json",
+      "expectedResult": {
+        "status": "not_final",
+        "winnerTeamId": null
+      }
+    },
+    {
+      "gameId": "5",
+      "description": "Game is currently in progress",
+      "fixture": "test/mocks/espn/summary/5.json",
+      "expectedResult": {
+        "status": "not_final",
+        "winnerTeamId": null
+      }
+    }
+  ]
+}
