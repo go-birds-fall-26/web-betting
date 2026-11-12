@@ -2,7 +2,17 @@
 
 <div>
     <label for="game">Pick a game</label>
-    <%- include('partials/game-select', { games }) %>
+    <select id="game">
+        <option value="">-- Select a game --</option>
+
+        <% games.forEach(game => { %>
+            <option value="<%= game.id %>"
+                data-home-id="<%= game.home_team_id %>" data-home-name="<%= game.home_team_name %>"
+                data-away-id="<%= game.away_team_id %>" data-away-name="<%= game.away_team_name %>">
+                <%= game.away_team_name %> vs. <%= game.home_team_name %>
+            </option>
+        <% }); %>
+    </select>
 </div>
 
 <div>
