@@ -1,3 +1,22 @@
+<link rel="stylesheet" href="/css/account.css">
+
+<%
+  const fullName = `${user.first_name} ${user.last_name}`;
+  const signClass = cents => (cents >= 0 ? 'positive' : 'negative');
+
+  const stats = [
+    { label: 'Cash', value: formatAmountCents(user.balance_cents) },
+    { label: 'In open positions', value: formatAmountCents(portfolio.summary.inPositionsCents) },
+    { label: 'Total profit', value: formatAmountCents(portfolio.summary.profitCents), className: signClass(portfolio.summary.profitCents) },
+    { label: 'Win rate', value: `${portfolio.summary.winRate}%` },
+  ];
+
+  const walletForms = [
+    { action: 'deposit', label: 'Deposit' },
+    { action: 'withdraw', label: 'Withdraw' },
+  ];
+%>
+
 <div class="page-head">
   <div class="wrap">
     <h1>Account</h1>
@@ -7,7 +26,7 @@
 <div class="wrap account">
   <aside class="account-nav">
     <!-- <div class="avatar"></div> -->
-    <p class="account-name"><%= user.first_name %> <%= user.last_name %></p>
+    <p class="account-name"><%= fullName %></p>
     <nav>
       <a href="#portfolio">Portfolio</a>
       <a href="#wallet">Wallet</a>
@@ -23,22 +42,12 @@
       </div>
 
       <div class="stats">
-        <div class="stat">
-          <span class="muted">Cash</span>
-          <strong><%= formatAmountCents(user.balance_cents) %></strong>
-        </div>
-        <div class="stat">
-          <span class="muted">In open positions</span>
-          <strong><%= formatAmountCents(portfolio.summary.inPositionsCents) %></strong>
-        </div>
-        <div class="stat">
-          <span class="muted">Total profit</span>
-          <strong class="<%= portfolio.summary.profitCents >= 0 ? 'positive' : 'negative' %>"><%= formatAmountCents(portfolio.summary.profitCents) %></strong>
-        </div>
-        <div class="stat">
-          <span class="muted">Win rate</span>
-          <strong><%= portfolio.summary.winRate %>%</strong>
-        </div>
+        <% stats.forEach(stat => { %>
+          <div class="stat panel">
+            <span class="muted"><%= stat.label %></span>
+            <strong class="<%= stat.className || '' %>"><%= stat.value %></strong>
+          </div>
+        <% }); %>
       </div>
 
       <div id="value-chart" class="chart" data-points="<%= JSON.stringify(portfolio.valueHistory) %>"></div>
@@ -74,7 +83,7 @@
                       <td><%= position.side %></td>
                       <td><%= position.contracts %></td>
                       <td><%= position.avgPriceCents %>¢</td>
-                      <td class="<%= position.profitCents >= 0 ? 'positive' : 'negative' %>"><%= formatAmountCents(position.profitCents) %></td>
+                      <td class="<%= signClass(position.profitCents) %>"><%= formatAmountCents(position.profitCents) %></td>
                     </tr>
                   <% }); %>
                 </tbody>
@@ -83,6 +92,8 @@
           </div>
         <% }); %>
       </div>
+
+      <p class="muted chart-credit">Chart by <a href="https://www.tradingview.com/" target="_blank" rel="noopener">TradingView</a></p>
     </section>
 
     <section id="wallet" class="account-section">
@@ -92,17 +103,13 @@
       </div>
 
       <div class="wallet-forms">
-        <form action="/account/deposit" method="POST">
-          <h3>Deposit</h3>
-          <input type="number" name="amount" step="0.01" min="0.01" placeholder="Amount in dollars" required>
-          <button class="button" type="submit">Deposit</button>
-        </form>
-
-        <form action="/account/withdraw" method="POST">
-          <h3>Withdraw</h3>
-          <input type="number" name="amount" step="0.01" min="0.01" placeholder="Amount in dollars" required>
-          <button class="button" type="submit">Withdraw</button>
-        </form>
+        <% walletForms.forEach(form => { %>
+          <form class="panel" action="/account/<%= form.action %>" method="POST">
+            <h3><%= form.label %></h3>
+            <input type="number" name="amount" step="0.01" min="0.01" placeholder="Amount in dollars" required>
+            <button class="button" type="submit"><%= form.label %></button>
+          </form>
+        <% }); %>
       </div>
 
       <h3>Transaction history</h3>
@@ -139,7 +146,7 @@
 
       <dl class="info">
         <dt class="muted">Name</dt>
-        <dd><%= user.first_name %> <%= user.last_name %></dd>
+        <dd><%= fullName %></dd>
         <dt class="muted">Email</dt>
         <dd><%= user.email %></dd>
       </dl>

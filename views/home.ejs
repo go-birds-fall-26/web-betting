@@ -1,4 +1,6 @@
-<div class="hero">
+<link rel="stylesheet" href="/css/home.css">
+
+<div class="page-head hero">
   <div class="wrap">
     <h1>NFL prediction market</h1>
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -20,7 +22,7 @@
 
       <div class="group-games-grid">
         <% week.games.forEach(game => { %>
-          <div class="game-card">
+          <div class="game-card panel">
             <div class="game-card-head">
               <h3><%= game.away.abbreviation %> @ <%= game.home.abbreviation %></h3>
               <span class="muted"><%= game.timeLabel %></span>

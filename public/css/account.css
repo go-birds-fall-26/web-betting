@@ -1,0 +1,113 @@
+/* sidebar, content */
+
+.account {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 3em;
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+
+.account-nav {
+  position: sticky;
+  top: 1.5em;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+}
+
+.account-name {
+  font-weight: 600;
+}
+
+.account-nav nav {
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid var(--line);
+}
+
+.account-nav nav a {
+  padding: 6px 0 6px 12px;
+  text-decoration: none;
+}
+
+.account-nav nav a:hover {
+  color: var(--yellow);
+}
+
+.account-section {
+  margin-bottom: 4em;
+  scroll-margin-top: 1.5em;
+}
+
+.account-section > h3 {
+  margin: 1.5em 0 .5em;
+}
+
+/* portfolio */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1em;
+  margin-bottom: 1.5em;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat strong {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+}
+
+.chart {
+  height: 240px;
+  margin-bottom: 8px;
+}
+
+.chart-credit {
+  margin-bottom: 2em;
+  font-size: 0.8rem;
+}
+
+/* wallet */
+
+.wallet-forms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1em;
+}
+
+.wallet-forms form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.wallet-forms input {
+  width: 100%;
+  padding: 8px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--chalk);
+  font: inherit;
+}
+
+/* information */
+
+.info {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 8px;
+}

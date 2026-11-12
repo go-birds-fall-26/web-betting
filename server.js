@@ -9,6 +9,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(expressLayouts);
+app.set("layout extractStyles", true);
 app.set("view engine", "ejs");
 app.locals.title = "web-betting";
 
