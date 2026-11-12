@@ -3,6 +3,7 @@ const path = require("node:path");
 const fs = require("node:fs/promises");
 const validator = require("validator");
 
+const TestDir = path.join(__dirname, "../test/fixtures/espn");
 const EventCategories = Object.freeze({
   GAME_WINNERS: "game-winners",
 });
@@ -18,53 +19,38 @@ router.get("/game-winners", async (req, res) => {
   }
 
   let filePath = path.join(
-    __dirname,
-    "../test/fixtures/espn/game-winners",
+    TestDir,
+    EventCategories.GAME_WINNERS,
     `${event}.json`,
   );
-  try {
-    let contents = await fs.readFile(filePath, "utf8");
-    let data = JSON.parse(contents);
-    return res.json(data);
-  } catch (error) {
-    if (error.code === "ENOENT") {
-      return res.status(404).json({ error: "Event not found" });
-    }
-
-    console.error("Failed to load fake ESPN data:", error);
-    return res.status(500).json({ error: "Internal server error" });
-  }
+  return sendFile(res, filePath);
 });
 
 router.get("/scenarios", async (req, res) => {
   let { category } = req.query;
-  let isValid =
-    typeof category === "string" &&
-    validator.isAlpha(category, "en-US", { ignore: "-" }) &&
-    ValidCategories.has(category);
+  let isValid = typeof category === "string" && ValidCategories.has(category);
 
   if (!isValid) {
     return res.status(400).json({
       error: `Invalid Category. Must be one of : ${[...ValidCategories].join(",")} `,
     });
   }
-  let filePath = path.join(
-    __dirname,
-    "../test/fixtures/espn/scenarios",
-    `${category}.json`,
-  );
+  let filePath = path.join(TestDir, "scenarios", `${category}.json`);
+  return sendFile(res, filePath);
+});
+
+async function sendFile(res, filePath) {
   try {
-    let contents = await fs.readFile(filePath, "utf8");
-    let data = JSON.parse(contents);
-    return res.json(data);
+    const contents = await fs.readFile(filePath, "utf8");
+    return res.json(JSON.parse(contents));
   } catch (error) {
     if (error.code === "ENOENT") {
-      return res.status(404).json({ error: "File not found" });
+      return res.status(404).json({ error: "Mock file not found" });
     }
 
-    console.error("Failed to load scenario data:", error);
+    console.error("Failed to load mock ESPN data:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
-});
+}
 
 module.exports = router;
