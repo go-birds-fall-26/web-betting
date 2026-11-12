@@ -1,0 +1,15 @@
+<h1>Market maker demo</h1>
+
+<div>
+    <label for="game">Pick a game</label>
+    <%- include('partials/game-select', { games }) %>
+</div>
+
+<div>
+    <label for="team">Pick a team</label>
+    <select id="team" disabled>
+        <option value="">-- Select a team --</option>
+    </select>
+</div>
+
+<script src="/js/markets.js" defer></script>
