@@ -4,7 +4,7 @@ CS 375 Group Project | Fall '26
 
 A mock prediction market for NFL games, in the spirit of [Kalshi](https://kalshi.com). Users sign up, load their account with fake money, and buy Yes or No contracts on questions about real NFL games (for example, "Team X wins game Y"). When the real game finishes, the app checks the result against ESPN's data and settles every bet. No real money is ever involved.
 
-> **Status:** in development. Wallet balances, Stripe test deposits, the ESPN settlement check, and the games/markets/bets data model are in. Bet placement, the Markets page, pricing, and login are in progress. See [docs/MARKETS.md](docs/MARKETS.md) for the Markets page plan.
+> **Status:** in development. Wallet balances, Stripe test deposits, the ESPN settlement check, and the games/markets/bets data model are in. The Markets page's game and team dropdowns are in. Bet placement, pricing, and login are in progress. See [docs/MARKETS.md](docs/MARKETS.md) for the Markets page plan.
 >
 > **Deadlines:** every [contract](#contract) feature done by **Sat Dec 5, 11:59 PM**. Finals week is buffer only: polish done by **Thu Dec 10**, demo in our final exam slot on **Fri Dec 11** (morning). See the [roadmap](docs/ROADMAP.md) for who's doing what each week.
 
