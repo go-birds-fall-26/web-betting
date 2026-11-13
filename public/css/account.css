@@ -87,23 +87,6 @@
   gap: 1em;
 }
 
-.wallet-forms form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.wallet-forms input {
-  width: 100%;
-  padding: 8px;
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  color: var(--chalk);
-  font: inherit;
-}
-
 /* information */
 
 .info {

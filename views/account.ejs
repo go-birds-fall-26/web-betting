@@ -104,7 +104,7 @@
 
       <div class="wallet-forms">
         <% walletForms.forEach(form => { %>
-          <form class="panel" action="/account/<%= form.action %>" method="POST">
+          <form class="panel form" action="/account/<%= form.action %>" method="POST">
             <h3><%= form.label %></h3>
             <input type="number" name="amount" step="0.01" min="0.01" placeholder="Amount in dollars" required>
             <button class="button" type="submit"><%= form.label %></button>

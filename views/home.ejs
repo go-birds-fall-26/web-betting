@@ -4,7 +4,11 @@
   <div class="wrap">
     <h1>NFL prediction market</h1>
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    <a class="button" href="/register">Sign up</a>
+    <% if (isLoggedIn) { %>
+      <a class="button" href="/account">View your account</a>
+    <% } else { %>
+      <a class="button" href="/register">Sign up</a>
+    <% } %>
   </div>
 </div>
 
