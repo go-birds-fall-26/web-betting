@@ -6,9 +6,12 @@
       <a href="/bets">Bets</a>
     </div>
     <div>
-      <a href="/account">Account</a>
-      <a href="/login">Log in</a>
-      <a class="button" href="/register">Sign up</a>
+      <% if (isLoggedIn) { %>
+        <a class="button" href="/account">My account</a>
+      <% } else { %>
+        <a href="/login">Log in</a>
+        <a class="button" href="/register">Sign up</a>
+      <% } %>
     </div>
   </nav>
 </header>
