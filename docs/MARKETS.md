@@ -2,7 +2,7 @@
 
 The Markets page is where a user picks what to bet on: a game, then a team, then a bet type (and a player or a number, depending on the bet), then an amount. This doc tracks what's built, how the pieces fit, and what's left.
 
-**Status:** in progress. The route and seed data exist; the page itself isn't written yet, so `/markets` returns a 500 for now.
+**Status:** in progress. The game and team dropdowns work (User Flow steps 1–2), using seed games until the sync job lands (#19). The price and Buy button are next (#22).
 
 ### User Flow
 
@@ -20,9 +20,11 @@ The current idea, not a fixed design. Change it as we build, and update this lis
 |---|---|
 | `src/db/sql/seed.sql` | Seeds five week 10 games into `events`, using real ESPN IDs. |
 | `src/services/events.js` | `getUpcomingEvents()` reads every row from `events`, ordered by `start_time`. |
-| `src/routes/markets.js` | `GET /markets` loads events and renders the `markets` view. |
+| `src/routes/markets.js` | `GET /markets` loads events and renders the `markets` view, passing them as `games`. |
 | `src/routes/index.js` | Mounts the route at `/markets`. |
 | `views/partials/nav.ejs` | Markets link in the nav. |
+| `views/markets.ejs` | The page: a game dropdown whose options carry each game's team IDs and names in `data-` attributes, and an empty, disabled team dropdown. |
+| `public/js/markets.js` | Fills the team dropdown when a game is picked; clears and disables it when the placeholder is picked. |
 
 To load the seed games:
 
@@ -45,6 +47,8 @@ ESPN ──(sync job, not built)──► events table ──► GET /markets �
 - **Games and teams are sent with the page.** Each game `<option>` carries its team IDs and names in `data-` attributes, so picking a game fills the team dropdown without a request.
 - **Players are fetched.** Picking a team calls a JSON route for that team's players. Starting with each team's passing, rushing, and receiving leaders, with room to grow to full rosters.
 - **Option values use `events.id`**, our own ID, not the ESPN one, because `markets.event_id` references `events.id`. Team IDs in `events` are ESPN IDs, which is what the roster route needs.
+- **Team option values are ESPN team IDs**, so the Buy step can compare the picked team with the game's `home_team_id` to decide Yes or No.
+- **The game dropdown lives directly in `markets.ejs`**, not in a partial, since no other page needs it yet. Move it into a partial if one does.
 - **Display order is away team first** ("Commanders vs. Giants" means WSH @ NYG). So the default market's Yes side is the **second** team named.
 
 ### 3. Next Steps
@@ -53,8 +57,8 @@ In rough order. "Depends on" means it needs that step done first.
 
 | # | Task | Depends on | Notes |
 |---|---|---|---|
-| 1 | `views/markets.ejs` and `views/partials/event-select.ejs` | — | Placeholder option, then one option per event with `data-home-id`, `data-home-name`, `data-away-id`, `data-away-name`. Empty, disabled team `<select>`. Load `/js/markets.js` with `defer`. |
-| 2 | `public/js/markets.js`: event → team dropdown | 1 | On `change`: clear the team select; disable it if the placeholder is picked; otherwise add the two teams from `dataset`. |
+| 1 | ✅ Done (#18). `views/markets.ejs` | — | Placeholder option, then one option per event with `data-home-id`, `data-home-name`, `data-away-id`, `data-away-name`. Empty, disabled team `<select>`. Load `/js/markets.js` with `defer`. |
+| 2 | ✅ Done (#18). `public/js/markets.js`: event → team dropdown | 1 | On `change`: clear the team select; disable it if the placeholder is picked; otherwise add the two teams from `dataset`. |
 | 3 | ESPN sync job | — | Add a scoreboard function to `src/services/espn.js` (next to `getGameResult`, follow its style) and a job in `src/jobs/` that upserts into `events` with `ON CONFLICT (espn_game_id) DO UPDATE`. Load the current NFL week plus the next two (see the README's [When markets open](../README.md#how-a-bet-pays-out)). Run once at startup and on its own cron variable (add the name to `.env.example`). Map ESPN statuses to `events.status`. |
 | 3b | Default market creation | — (3 to wire it in) | A function that makes sure a game has its "home team wins" market, and does nothing if it already exists (needs a uniqueness rule in the schema so a game can't get two). Build and test it against the seeded games, so it doesn't wait on step 3. Whichever of 3 and 3b merges second adds the one call from the sync job. |
 | 4 | Store team leaders | 3, plus a decision on where players live | Read from the scoreboard (see ESPN notes). Never delete players because a list came back empty. |
