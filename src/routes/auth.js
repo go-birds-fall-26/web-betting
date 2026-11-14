@@ -1,3 +1,4 @@
+const crypto = require('node:crypto');
 const router = require('express').Router();
 
 const { 
@@ -29,7 +30,9 @@ router.post('/login', async (req, res) => {
     let email = req.body.email; // TODO: make case-insensitive
     let password = req.body.password;
     await validateLoginCredentials(email, password);
-    return res.redirect('/');
+
+    let token = crypto.randomBytes(32).toString('hex');
+    return res.setHeader("Set-Cookie", `session=${token}; HttpOnly; Path=/`).redirect('/');
 
   } catch (error) {
 
