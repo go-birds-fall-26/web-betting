@@ -1,0 +1,116 @@
+/* hero */
+
+.hero {
+  padding: 6em 0 5em;
+  background:
+    repeating-linear-gradient(
+      to right,
+      transparent 0 80px,
+      var(--yard-line) 80px 82px
+    ),
+    var(--turf);
+}
+
+.hero .wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.hero h1 {
+  font-size: 4.5rem;
+  max-width: 14ch;
+}
+
+.hero p {
+  max-width: 44ch;
+  margin-bottom: .5em;
+  font-size: 1.25rem;
+}
+
+/* games */
+
+.group {
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+
+.group-games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1em;
+}
+
+.game-card {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom, var(--bg), var(--panel));
+}
+
+.game-card-head {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 8px;
+}
+
+.game-card-market {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.market-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.market-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.game-card .yes {
+  display: inline-block;
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid var(--green);
+  border-radius: 100px;
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* probability bar */
+
+.progress {
+  width: 100%;
+  height: 3px;
+  appearance: none;
+  border: 0;
+  border-radius: 4px;
+  background: var(--line);
+}
+
+.progress::-webkit-progress-bar {
+  background: var(--line);
+}
+
+.progress::-webkit-progress-value {
+  background: var(--bar-color, var(--turf-light));
+}
+
+.progress::-moz-progress-bar {
+  background: var(--bar-color, var(--turf-light));
+}
+
+.third {
+  padding-top: 5em;
+  padding-bottom: 5em;
+  background: var(--chalk);
+  color: var(--ink);
+}
