@@ -1,15 +1,21 @@
-<h1>Log in</h1>
+<link rel="stylesheet" href="/css/auth.css">
 
-<form action="/login" method="POST">
-    <div>
-        <label for="email">Email:</label>
-        <input id="email" type="email" name="email" required>
-    </div>
+<div class="page-head">
+  <div class="wrap">
+    <h1>Log in</h1>
+  </div>
+</div>
 
-    <div>
-        <label for="password">Password:</label>
-        <input id="password" type="password" name="password" required>
-    </div>
+<div class="wrap auth">
+  <form class="panel form" action="/login" method="POST">
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" required>
 
-    <button type="submit">Login</button>
-</form>
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" required>
+
+    <button class="button" type="submit">Log in</button>
+  </form>
+
+  <p class="muted">No account yet? <a href="/register">Sign up</a></p>
+</div>

@@ -1,25 +1,27 @@
-<h1>Register</h1>
+<link rel="stylesheet" href="/css/auth.css">
 
-<form action="/register" method="POST">
-    <div>
-        <label for="first_name">First Name:</label>
-        <input id="first_name" type="text" name="first_name" required>
-    </div>
+<div class="page-head">
+  <div class="wrap">
+    <h1>Sign up</h1>
+  </div>
+</div>
 
-    <div>
-        <label for="last_name">Last Name:</label>
-        <input id="last_name" type="text" name="last_name" required>
-    </div>
+<div class="wrap auth">
+  <form class="panel form" action="/register" method="POST">
+    <label for="first_name">First name</label>
+    <input id="first_name" type="text" name="first_name" required>
 
-    <div>
-        <label for="email">Email:</label>
-        <input id="email" type="email" name="email" required>
-    </div>
+    <label for="last_name">Last name</label>
+    <input id="last_name" type="text" name="last_name" required>
 
-    <div>
-        <label for="password">Password:</label>
-        <input id="password" type="password" name="password" required>
-    </div>
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" required>
 
-    <button type="submit">Register</button>
-</form>
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" required>
+
+    <button class="button" type="submit">Sign up</button>
+  </form>
+
+  <p class="muted">Already have an account? <a href="/login">Log in</a></p>
+</div>
