@@ -4,6 +4,7 @@
     "ejs": "^7.0.2",
     "express": "^5.3.0",
     "express-ejs-layouts": "^2.5.1",
+    "cookie-parser": "^1.4.7",
     "node-cron": "^4.6.0",
     "pg": "^8.23.1",
     "stripe": "^23.1.0",
