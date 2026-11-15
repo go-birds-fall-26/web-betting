@@ -1,2 +1,56 @@
-<h1>Home</h1>
-<p>home page content</p>
+<link rel="stylesheet" href="/css/home.css">
+
+<div class="page-head hero">
+  <div class="wrap">
+    <h1>NFL prediction market</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <% if (isLoggedIn) { %>
+      <a class="button" href="/account">View your account</a>
+    <% } else { %>
+      <a class="button" href="/register">Sign up</a>
+    <% } %>
+  </div>
+</div>
+
+<div class="games">
+  <% if (weeks.length === 0) { %>
+    <p class="wrap">No games available at this time.</p>
+  <% } %>
+
+  <% weeks.forEach(week => { %>
+    <div class="group wrap">
+      <div class="group-head">
+        <h2><%= week.name %></h2>
+        <span class="muted">Game times shown in EDT.</span>
+      </div>
+
+      <div class="group-games-grid">
+        <% week.games.forEach(game => { %>
+          <div class="game-card panel">
+            <div class="game-card-head">
+              <h3><%= game.away.abbreviation %> @ <%= game.home.abbreviation %></h3>
+              <span class="muted"><%= game.timeLabel %></span>
+            </div>
+
+            <% [game.away, game.home].forEach(team => { %>
+              <div class="game-card-market">
+                <div class="market-logo"></div>
+                <div class="market-details">
+                  <span><%= team.name %></span>
+                  <progress class="progress" value="<%= team.chance %>" max="100" style="--bar-color: <%= team.color %>"></progress>
+                </div>
+                <button class="yes"><%= team.chance %>%</button>
+              </div>
+            <% }); %>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  <% }); %>
+</div>
+
+<div class="third">
+  <div class="wrap">
+    idk some more content here
+  </div>
+</div>

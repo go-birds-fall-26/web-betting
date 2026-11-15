@@ -12,7 +12,21 @@ class UserNotFoundError extends AppError {
   }
 }
 
+class EmailAlreadyTakenError extends AppError {
+  constructor() {
+    super("Email already taken", 409);
+  }
+}
+
+class InvalidCredentialsError extends AppError {
+  constructor() {
+    super("Invalid email or password", 401);
+  }
+}
+
 module.exports = {
   InvalidUserError,
   UserNotFoundError,
+  EmailAlreadyTakenError,
+  InvalidCredentialsError,
 };

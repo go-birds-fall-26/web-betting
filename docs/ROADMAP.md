@@ -45,7 +45,7 @@ Short week: the plan is going out on Tuesday, and Abdul is away from Thursday.
 
 | Work item | Issue | Suggested owner | Size | Depends on | Touches |
 |---|---|---|---|---|---|
-| Markets page: game → team dropdowns ([MARKETS](MARKETS.md) steps 1–2), using seed games until the sync job lands | #18 | Nicolas | M | — | `views/markets.ejs`, `views/partials/event-select.ejs`, `public/js/markets.js` |
+| Markets page: game → team dropdowns ([MARKETS](MARKETS.md) steps 1–2), using seed games until the sync job lands | #18 | Nicolas | M | — | `views/markets.ejs`, `public/js/markets.js` |
 | Fake ESPN API with saved responses, for tests and demos | #15 | Abdul | M | — | `src/routes/` (test-only route), saved JSON |
 | ESPN sync job: load this NFL week plus the next two into `events`, map ESPN statuses (MARKETS step 3) | #19 | Ryan | M | — | `src/services/espn.js`, `src/jobs/`, `.env.example` |
 | Pricing and fee functions: Yes/No price from counts (clamped to 1–99¢), and the fee formula | #8 | Alex | M | — | new `src/services/pricing.js` |

@@ -1,0 +1,72 @@
+/* variables and general stuff */
+
+:root {
+  --bg: #1c1612;
+  --panel: #2a211b;
+  --line: #43362b;
+  --chalk: #f4f1e6;
+  --muted: #a89a8a;
+  --turf: #0f3d2b;
+  --turf-light: #1b6b4a;
+  --green: #129b62;
+  --yellow: #f2c230;
+  --red: #c72c41;
+  --ink: #141211;
+  --yard-line: #7d8882;
+
+  --font-body: "IBM Plex Sans", sans-serif;
+  --font-heading: "Oswald", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  --radius: 4px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--chalk);
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+/* utilities (colors) */
+
+.muted {
+  color: var(--muted);
+}
+
+.positive {
+  color: var(--green);
+}
+
+.negative {
+  color: var(--red);
+}

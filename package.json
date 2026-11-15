@@ -8,6 +8,7 @@
     "pg": "^8.23.1",
     "stripe": "^23.1.0",
     "validator": "^13.15.35"
+    "argon2": "^0.45.2"
   },
   "devDependencies": {
     "concurrently": "^10.0.6",

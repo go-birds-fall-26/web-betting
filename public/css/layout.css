@@ -1,0 +1,73 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 2em;
+}
+
+/* header */
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.site-header nav > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.site-header a:not(.button) {
+  text-decoration: none;
+}
+
+.site-header a:not(.button):hover {
+  color: var(--yellow);
+}
+
+.site-header .button {
+  padding: 6px 16px;
+}
+
+.site-name {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* footer */
+
+.site-footer {
+  padding: 1em 0;
+  border-top: 1px solid var(--line);
+}
+
+/* page head (the green part) */
+
+.page-head {
+  padding: 2.5em 0;
+  background: var(--turf);
+  border-bottom: 6px solid var(--yellow);
+}
+
+.page-head h1 {
+  font-size: 3rem;
+  line-height: 1;
+}

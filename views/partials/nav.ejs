@@ -1,9 +1,17 @@
-<header>
-  <nav>
-    <a href="/">Home</a>
-    <a href="/markets">Markets</a>
-    <a href="/account">Account</a>
-    <a href="/login">Log in</a>
-    <a href="/register">Register</a>
+<header class="site-header">
+  <nav class="wrap">
+    <div>
+      <a href="/" class="site-name">Kalshi Clone</a>
+      <a href="/markets">Markets</a>
+      <a href="/bets">Bets</a>
+    </div>
+    <div>
+      <% if (isLoggedIn) { %>
+        <a class="button" href="/account">My account</a>
+      <% } else { %>
+        <a href="/login">Log in</a>
+        <a class="button" href="/register">Sign up</a>
+      <% } %>
+    </div>
   </nav>
 </header>
