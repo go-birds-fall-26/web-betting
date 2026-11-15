@@ -8,11 +8,10 @@ CREATE TABLE IF NOT EXISTS users (
   balance_cents INTEGER NOT NULL DEFAULT 0 CHECK (balance_cents >= 0)
 );
 
-CREATE TABLE IF NOT EXISTS sessions (
+CREATE TABLE IF NOT EXISTS user_sessions (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL REFERENCES users(id),
   token TEXT NOT NULL UNIQUE,
-  expires_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
