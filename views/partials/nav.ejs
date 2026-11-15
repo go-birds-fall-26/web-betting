@@ -8,6 +8,12 @@
     <div>
       <% if (isLoggedIn) { %>
         <a class="button" href="/account">My account</a>
+
+        <%# TODO: make this better? %>
+        <form action="/logout" method="POST">
+          <button class="button" type="submit">Log out</button>
+        </form>
+
       <% } else { %>
         <a href="/login">Log in</a>
         <a class="button" href="/register">Sign up</a>

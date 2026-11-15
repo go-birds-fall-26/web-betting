@@ -56,8 +56,7 @@ const PLACEHOLDER_PORTFOLIO = {
 
 router.get("/", async (req, res) => {
   try {
-    // TO DO: Swap to req.session.userId once a user is logged in
-    let userId = Number(process.env.DEV_USER_ID);
+    let userId = getUserId(req);
     let user = await getUserInformation(userId);
     let transactions = await getUserTransactions(userId);
 
@@ -101,8 +100,8 @@ router.post("/withdraw", async (req, res) => {
 });
 
 function getUserId(req) {
-  // TO DO: Swap to req.session.userId once a user is logged in
-  return Number(req.body.userId || process.env.DEV_USER_ID);
+  // TO DO: Add some error handling
+  return Number(req.session.userId || process.env.DEV_USER_ID);
 }
 
 function handleWalletError(res, error) {

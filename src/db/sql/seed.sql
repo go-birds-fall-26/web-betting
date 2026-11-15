@@ -8,6 +8,13 @@ CREATE TABLE IF NOT EXISTS users (
   balance_cents INTEGER NOT NULL DEFAULT 0 CHECK (balance_cents >= 0)
 );
 
+CREATE TABLE IF NOT EXISTS user_sessions (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  token TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS teams (
   id TEXT PRIMARY KEY,
   location TEXT NOT NULL,

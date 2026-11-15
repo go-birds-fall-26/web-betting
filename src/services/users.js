@@ -36,7 +36,7 @@ async function getUserInformation(userId, client = pool) {
 
 async function getUserCredentialsByEmail(email, client = pool) {
   let result = await client.query(
-    "SELECT password_hash FROM users WHERE email = $1",
+    "SELECT id, password_hash FROM users WHERE email = $1",
     [email],
   );
 
@@ -55,7 +55,8 @@ async function createUser(firstName, lastName, email, passwordHash, client = poo
     );
 
     let userId = result.rows[0].id;
-    console.log("Created New User with ID:", userId);
+    console.log("Created New User with ID:", userId); // TODO: remove this log soon
+    return userId;
   } catch (error) {
     if (error.code === "23505") { // Unique violation code returned from Postgres
       throw new EmailAlreadyTakenError();
