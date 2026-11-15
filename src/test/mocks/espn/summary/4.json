@@ -1,0 +1,38 @@
+{
+  "header": {
+    "id": "4",
+    "competitions": [
+      {
+        "status": {
+          "type": {
+            "name": "STATUS_SCHEDULED",
+            "state": "pre",
+            "completed": false
+          }
+        },
+        "competitors": [
+          {
+            "homeAway": "home",
+            "score": "0",
+            "winner": null,
+            "team": {
+              "id": "6",
+              "displayName": "Dallas Cowboys",
+              "abbreviation": "DAL"
+            }
+          },
+          {
+            "homeAway": "away",
+            "score": "0",
+            "winner": null,
+            "team": {
+              "id": "21",
+              "displayName": "Philadelphia Eagles",
+              "abbreviation": "PHI"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
