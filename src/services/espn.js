@@ -1,3 +1,24 @@
+// gets the ESPN scoreboard for a given week and returns the json
+async function getScoreboard(week) {
+  const weekString = String(week);
+  const url = `https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=${weekString}`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`ESPN scoreboard request failed: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  if (!Array.isArray(data.events)) {
+    throw new Error("ESPN scoreboard response is missing its events array");
+  }
+
+  return data;
+}
+
+
 // returns an json object containing gameId (string), status (string - final, not_final, tie), and winnerTeamId (string)
 // gameId is an exclusive string for every game. this is found in the url of any game on the espn website (ex: https://www.espn.com/nfl/game/_/gameId/401872988/giants-commanders)
 // winnerTeamId represents the teamId of the winning team. every NFL team has an exclusive ID
@@ -80,7 +101,7 @@ async function getGameResult(gameId) {
 
 }
 
-module.exports = { getGameResult };
+module.exports = { getGameResult, getScoreboard };
 
 // tests
 // getGameResult("401873037")
