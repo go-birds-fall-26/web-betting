@@ -11,6 +11,16 @@
   gap: 4px;
 }
 
+.auth .error {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid var(--red);
+  border-radius: var(--radius);
+  color: var(--red);
+  font-weight: 600;
+}
+
 .auth .button {
   margin-top: 0.5em;
   align-self: center;

@@ -50,8 +50,10 @@ router.post('/login', async (req, res) => {
   } catch (error) {
 
     if (error instanceof InvalidCredentialsError) {
-      return res.status(error.statusCode).json({ 
-        error: error.message
+      return res.status(error.statusCode).render('auth/login', {
+        title: 'Log in',
+        error: error.message,
+        email: req.body.email,
       });
     }
 
@@ -87,8 +89,12 @@ router.post('/register', async (req, res) => {
   } catch (error) {
     
     if (error instanceof EmailAlreadyTakenError) {
-      return res.status(error.statusCode).json({
+      return res.status(error.statusCode).render('auth/register', {
+        title: 'Register',
         error: error.message,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        email: req.body.email,
       });
     }
 
