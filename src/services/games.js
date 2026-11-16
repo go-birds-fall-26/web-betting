@@ -18,13 +18,24 @@ function getWeekName(event) {
     return `Week ${event.week}`;
 }
 
+// i stole this code from online but basically it picks the team color that contrasts well
+function pickColor(color, alternateColor) {
+    let isBright = (hex) => {
+        let [red, green, blue] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+        return Math.max(red, green, blue) > 100;
+    };
+
+    let options = [color, alternateColor].filter(isBright);
+    return `#${options[0] ?? "f4f1e6"}`;
+}
+
 function toTeam(event, side, chance) {
     return {
         id: event[`${side}_team_id`],
         name: `${event[`${side}_location`]} ${event[`${side}_name`]}`,
         abbreviation: event[`${side}_abbreviation`],
         logo: event[`${side}_logo`],
-        color: `#${event[`${side}_color`]}`,
+        color: pickColor(event[`${side}_color`], event[`${side}_alternate_color`]),
         chance,
     };
 }
