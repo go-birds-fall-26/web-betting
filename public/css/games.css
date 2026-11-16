@@ -10,7 +10,8 @@
   display: flex;
   flex-direction: column;
   gap: 1em;
-  background: linear-gradient(to bottom, var(--bg), var(--panel));
+  /* background: linear-gradient(to bottom, var(--bg), var(--panel)); */
+  background: var(--panel);
 }
 
 .game-card-head {
