@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/css/games.css">
 <link rel="stylesheet" href="/css/home.css">
 
 <div class="page-head hero">
@@ -19,32 +20,7 @@
 
   <% weeks.forEach(week => { %>
     <div class="group wrap">
-      <div class="group-head">
-        <h2><%= week.name %></h2>
-        <span class="muted">Game times shown in EDT.</span>
-      </div>
-
-      <div class="group-games-grid">
-        <% week.games.forEach(game => { %>
-          <div class="game-card panel">
-            <div class="game-card-head">
-              <h3><%= game.away.abbreviation %> @ <%= game.home.abbreviation %></h3>
-              <span class="muted"><%= game.timeLabel %></span>
-            </div>
-
-            <% [game.away, game.home].forEach(team => { %>
-              <div class="game-card-market">
-                <div class="market-logo"></div>
-                <div class="market-details">
-                  <span><%= team.name %></span>
-                  <progress class="progress" value="<%= team.chance %>" max="100" style="--bar-color: <%= team.color %>"></progress>
-                </div>
-                <button class="yes"><%= team.chance %>%</button>
-              </div>
-            <% }); %>
-          </div>
-        <% }); %>
-      </div>
+      <%- include('partials/game-group', { week }) %>
     </div>
   <% }); %>
 </div>
