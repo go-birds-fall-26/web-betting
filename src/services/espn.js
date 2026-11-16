@@ -1,4 +1,4 @@
-// gets the ESPN scoreboard for a given week and returns the json
+// gets the ESPN scoreboard for a given week (Integer) and returns the json
 // if no week is given, the function will return the json for the current week of events
 async function getScoreboard(week) {
   const url = new URL ("https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard");
@@ -21,7 +21,7 @@ async function getScoreboard(week) {
 
   // job will depend on ESPN returning a valid week in order to know what the current week is
   if (!Number.isInteger(data?.week?.number) || data.week.number < 1) {
-    throw new Error("ESPN response is missing a valid week number");
+    throw new Error("ESPN response is missing a valid week Integer");
   }
 
   return data;
