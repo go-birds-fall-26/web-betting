@@ -1,0 +1,14 @@
+<%# week: { id, name, games } %>
+
+<section id="<%= week.id %>" data-week>
+  <div class="group-head">
+    <h2><%= week.name %></h2>
+    <span class="muted">Game times shown in EDT.</span>
+  </div>
+
+  <div class="group-games-grid">
+    <% week.games.forEach(game => { %>
+      <%- include('game-card', { game }) %>
+    <% }); %>
+  </div>
+</section>

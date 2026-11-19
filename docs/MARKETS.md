@@ -19,8 +19,10 @@ The current idea, not a fixed design. Change it as we build, and update this lis
 | File | What it does |
 |---|---|
 | `src/db/sql/seed.sql` | Seeds five week 10 games into `events`, using real ESPN IDs. |
-| `src/services/events.js` | `getUpcomingEvents()` reads every row from `events`, ordered by `start_time`. |
-| `src/routes/markets.js` | `GET /markets` loads events and renders the `markets` view, passing them as `games`. |
+| `src/services/events.js` | `getUpcomingEvents()` reads games that aren't final, joined to `teams` for names, logos, and colors, ordered by week and `start_time`. |
+| `src/services/games.js` | `getUpcomingWeeks()` groups those games by week and shapes each team for the game cards. Prices use `pricing.js`. |
+| `src/routes/markets.js` | `GET /markets` renders the browse page (games grouped by week, with a team filter). `GET /markets/new` renders the `markets` view with the game and team dropdowns, passing events as `games`. |
+| `views/markets/index.ejs`, `views/partials/game-card.ejs`, `views/partials/game-group.ejs` | The browse page. The cards and groups are shared with the home page. |
 | `src/routes/index.js` | Mounts the route at `/markets`. |
 | `views/partials/nav.ejs` | Markets link in the nav. |
 | `views/markets.ejs` | The page: a game dropdown whose options carry each game's team IDs and names in `data-` attributes, and an empty, disabled team dropdown. |

@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="/css/games.css">
+
+<div class="page-head">
+  <div class="wrap">
+    <h1>Markets</h1>
+  </div>
+</div>
+
+<div class="wrap with-sidebar">
+  <aside class="sidebar">
+    <nav>
+      <% weeks.forEach(week => { %>
+        <a href="#<%= week.id %>"><%= week.name %></a>
+      <% }); %>
+    </nav>
+
+    <label class="muted" for="team-filter">Filter by team</label>
+    <select class="field" id="team-filter">
+      <option value="">All teams</option>
+      <% teams.forEach(team => { %>
+        <option value="<%= team.abbreviation %>"><%= team.name %></option>
+      <% }); %>
+    </select>
+  </aside>
+
+  <div class="markets-content">
+    <% weeks.forEach(week => { %>
+      <%- include('../partials/game-group', { week }) %>
+    <% }); %>
+
+    <p id="no-games" class="muted" <%= weeks.length === 0 ? '' : 'hidden' %>>No games to show.</p>
+  </div>
+</div>
+
+<script src="/js/game-filter.js"></script>

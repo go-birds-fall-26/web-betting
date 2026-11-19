@@ -35,8 +35,7 @@
   font-size: 2rem;
 }
 
-.avatar,
-.market-logo {
+.avatar {
   flex: none;
   border-radius: 50%;
   background: var(--chalk);
@@ -104,7 +103,8 @@
   font-size: 0.9rem;
 }
 
-.form input {
+.form input,
+.field {
   width: 100%;
   padding: 8px;
   margin: 0 0 8px 0;
@@ -113,4 +113,38 @@
   border-radius: var(--radius);
   color: var(--chalk);
   font: inherit;
+}
+
+/* for sticky sidebar (account, markets page) */
+
+.with-sidebar {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 3em;
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+
+.sidebar {
+  position: sticky;
+  top: 1.5em;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid var(--line);
+}
+
+.sidebar nav a {
+  padding: 6px 0 6px 12px;
+  text-decoration: none;
+}
+
+.sidebar nav a:hover {
+  color: var(--yellow);
 }

@@ -8,8 +8,12 @@
 
 <div class="wrap auth">
   <form class="panel form" action="/login" method="POST">
+    <% if (locals.error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+
     <label for="email">Email</label>
-    <input id="email" type="email" name="email" required>
+    <input id="email" type="email" name="email" value="<%= locals.email || '' %>" required>
 
     <label for="password">Password</label>
     <input id="password" type="password" name="password" required>

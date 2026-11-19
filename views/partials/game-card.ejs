@@ -1,0 +1,21 @@
+<%# game: { away, home, timeLabel }, team: { name, abbreviation, logo, color, chance } %>
+
+<div class="game-card panel" data-teams="<%= game.away.abbreviation %> <%= game.home.abbreviation %>">
+  <div class="game-card-head">
+    <h3><%= game.away.abbreviation %> @ <%= game.home.abbreviation %></h3>
+    <span class="muted"><%= game.timeLabel %></span>
+  </div>
+
+  <% [game.away, game.home].forEach(team => { %>
+    <div class="game-card-team">
+      <img class="team-logo" src="<%= team.logo %>" alt="">
+
+      <div class="team-info">
+        <span><%= team.name %></span>
+        <progress class="progress" value="<%= team.chance %>" max="100" style="--bar-color: <%= team.color %>"></progress>
+      </div>
+
+      <span class="chance"><%= team.chance %>%</span>
+    </div>
+  <% }); %>
+</div>
