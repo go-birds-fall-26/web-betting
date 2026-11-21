@@ -50,6 +50,9 @@ CREATE TABLE IF NOT EXISTS markets (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS markets_event_template_unique
+ON markets (event_id, template);
+
 CREATE TABLE IF NOT EXISTS markets_outcomes (
   id SERIAL PRIMARY KEY,
   market_id INTEGER NOT NULL UNIQUE REFERENCES markets(id),
