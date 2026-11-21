@@ -62,8 +62,21 @@ async function withdrawMoney(userId, amountCents) {
   return applyBalanceChange(userId, -amountCents, TransactionType.WITHDRAW);
 }
 
-async function chargeBet(userId, betId, amountCents) {
+async function chargeBet(userId, betId, amountCents, client = null) {
   validateAmount(amountCents);
+
+  // Uses user defined client so transaction can be rolled back
+  if (client) {
+    return applyBalanceChangeWithClient(
+      client,
+      userId,
+      -amountCents,
+      TransactionType.BET,
+      { betId },
+    );
+  }
+
+  // Creates its own client
   return applyBalanceChange(userId, -amountCents, TransactionType.BET, {
     betId,
   });
@@ -83,7 +96,8 @@ async function processRefund(userId, betId, amountCents) {
   });
 }
 
-async function applyBalanceChange(
+async function applyBalanceChangeWithClient(
+  client,
   userId,
   signedAmountCents,
   transactionType,
@@ -91,39 +105,58 @@ async function applyBalanceChange(
 ) {
   validateUserId(userId);
 
+  let currentBalance = await getUserBalanceForUpdate(userId, client);
+
+  if (stripeSessionId !== null) {
+    let existing = await client.query(
+      `SELECT 1 FROM wallet_transactions WHERE stripe_session_id = $1`,
+      [stripeSessionId],
+    );
+
+    if (existing.rows.length > 0) {
+      return currentBalance;
+    }
+  }
+
+  let newBalance = currentBalance + signedAmountCents;
+
+  if (newBalance < 0) {
+    throw new InsufficientBalanceError();
+  }
+
+  await updateBalance(userId, newBalance, client);
+
+  await recordTransaction(
+    client,
+    userId,
+    transactionType,
+    signedAmountCents,
+    newBalance,
+    stripeSessionId,
+    betId,
+  );
+
+  return newBalance;
+}
+
+async function applyBalanceChange(
+  userId,
+  signedAmountCents,
+  transactionType,
+  options = {},
+) {
   let client = await pool.connect();
 
   try {
     // starts a database transaction
     await client.query("BEGIN");
-    let currentBalance = await getUserBalanceForUpdate(userId, client);
 
-    if (stripeSessionId !== null) {
-      let existing = await client.query(
-        `SELECT 1 FROM wallet_transactions WHERE stripe_session_id = $1`,
-        [stripeSessionId],
-      );
-      if (existing.rows.length > 0) {
-        await client.query("COMMIT");
-        return currentBalance;
-      }
-    }
-
-    let newBalance = currentBalance + signedAmountCents;
-
-    if (newBalance < 0) {
-      throw new InsufficientBalanceError();
-    }
-
-    await updateBalance(userId, newBalance, client);
-    await recordTransaction(
+    let newBalance = await applyBalanceChangeWithClient(
       client,
       userId,
-      transactionType,
       signedAmountCents,
-      newBalance,
-      stripeSessionId,
-      betId,
+      transactionType,
+      options,
     );
 
     // Saves changes
