@@ -11,6 +11,7 @@ const {
 const AppError = require("../errors/AppError");
 const { getUserInformation } = require("../services/users");
 const { getAmountCents, formatAmountCents } = require("../utils/money");
+const { BetSide } = require("../services/betting");
 
 const PLACEHOLDER_PORTFOLIO = {
   summary: { inPositionsCents: 31200, profitCents: 18600, winRate: 58 },
@@ -28,22 +29,46 @@ const PLACEHOLDER_PORTFOLIO = {
       id: "open",
       name: "Open",
       positions: [
-        { event: "Home Team wins", side: "Yes", contracts: 10, avgPriceCents: 62, profitCents: 40 },
-        { event: "Away Team wins", side: "No", contracts: 25, avgPriceCents: 70, profitCents: -75 },
+        {
+          event: "Home Team wins",
+          side: BetSide.YES,
+          contracts: 10,
+          avgPriceCents: 62,
+          profitCents: 40,
+        },
+        {
+          event: "Away Team wins",
+          side: BetSide.NO,
+          contracts: 25,
+          avgPriceCents: 70,
+          profitCents: -75,
+        },
       ],
     },
     {
       id: "won",
       name: "Won",
       positions: [
-        { event: "Home Team wins", side: "Yes", contracts: 20, avgPriceCents: 48, profitCents: 1040 },
+        {
+          event: "Home Team wins",
+          side: BetSide.YES,
+          contracts: 20,
+          avgPriceCents: 48,
+          profitCents: 1040,
+        },
       ],
     },
     {
       id: "lost",
       name: "Lost",
       positions: [
-        { event: "Away Team wins", side: "Yes", contracts: 15, avgPriceCents: 55, profitCents: -825 },
+        {
+          event: "Away Team wins",
+          side: BetSide.YES,
+          contracts: 15,
+          avgPriceCents: 55,
+          profitCents: -825,
+        },
       ],
     },
     {

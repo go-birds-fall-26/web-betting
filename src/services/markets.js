@@ -1,6 +1,7 @@
 const pool = require("../db/pool");
 
-async function ensureDefaultMarket(eventId, client = pool) {
+// Returns default home-win market (creates one if it doesn't exit)
+async function createHomeWinMarket(eventId, client = pool) {
   if (!Number.isInteger(eventId) || eventId <= 0) {
     throw new Error("Invalid event ID");
   }
@@ -19,7 +20,6 @@ async function ensureDefaultMarket(eventId, client = pool) {
     throw new Error(`Event ${eventId} not found`);
   }
   let event = result.rows[0];
-  // Form the question: Will the Home Team beat the Away team
   let question = `Will the ${event.home_name} beat the ${event.away_name}?`;
 
   // Create the market, template = home_wins
@@ -45,4 +45,4 @@ async function ensureDefaultMarket(eventId, client = pool) {
   return insertResult.rows[0];
 }
 
-module.exports = { ensureDefaultMarket };
+module.exports = { createHomeWinMarket };
