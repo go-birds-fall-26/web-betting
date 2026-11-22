@@ -8,6 +8,8 @@
 async function syncEvents() {
     // import function that calls ESPN API
     const { getScoreboard } = require("../services/espn");
+    // import function that updates DB
+    const { upsertEvent } = require("../services/events");
 
     const currentScoreboard = await getScoreboard();
 
@@ -38,4 +40,60 @@ async function syncEvents() {
         const scoreboard = await getScoreboard(week);
         scoreboards.push(scoreboard);
     }
+
+
+    // loop through every scoreboard to find the events for a given week, then loop through
+    // every event/game to extract the relevant values. then upsert into the events DB
+    for (const scoreboard of scoreboards) {
+        for (const game of scoreboard.events) {
+            const competition = game.competitions[0];
+
+            const homeTeam = competition.competitors.find(
+                team => team.homeAway === "home"
+            );
+
+            const awayTeam = competition.competitors.find(
+                team => team.homeAway === "away"
+            );
+
+            const espnStatus = competition.status.type;
+            let status;
+
+            if (espnStatus.name === "STATUS_SCHEDULED") {
+                status = "scheduled";
+            } else if (espnStatus.state === "in") {
+                status = "in_progress";
+            } else if (
+                espnStatus.name === "STATUS_FINAL" &&
+                espnStatus.completed === true
+            ) {
+                status = "final";
+            } else {
+                throw new Error(`Unsupported ESPN status: ${espnStatus.name}`);
+            }
+
+            const winner = status === "final"
+                ? competition.competitors.find(team => team.winner === true)
+                : null;
+
+            // upsert into events DB
+            await upsertEvent({
+                espn_game_id: game.id,
+                season_type: scoreboard.season.type,
+                week: scoreboard.week.number,
+                home_team_id: homeTeam.team.id,
+                away_team_id: awayTeam.team.id,
+                start_time: game.date,
+                status: status,
+                home_score: homeTeam.score == null || homeTeam.score === ""
+                    ? null : Number(homeTeam.score),
+                away_score: awayTeam.score == null || awayTeam.score === ""
+                    ? null : Number(awayTeam.score),
+                winner_team_id: winner ? winner.team.id : null
+            });
+        }
+    }
+
 }
+
+module.exports = { syncEvents };
