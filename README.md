@@ -32,7 +32,7 @@ Stripe deposits are optional. See the [Stripe Setup Guide](docs/STRIPE.md) for s
 
 ## What it does
 
-- **Accounts:** sign up, log in, and keep a balance. Until login exists, `DEV_USER_ID` in `.env` acts as the logged-in user.
+- **Accounts:** sign up, log in, and keep a balance.
 - **Fake money:** deposits go through the [Stripe](https://stripe.com/docs/testing) API in test mode, so users can add "paper money" without any real banking. Withdrawals are mocked: they only decrement the user's balance. Bets are paid for from this balance, and winnings are paid back into it.
 - **Markets:** users pick a game and a bet template ("I want to bet on game X for outcome Y"). The default bet, "Team X wins game Y," is built first. Users can pick either team: the app maps that choice onto the game's one [default market](#terminology) (picking the home team buys Yes, picking the away team buys No). Bets fall into three kinds:
   - **Match:** stats across both teams, e.g. total points scored in the game.

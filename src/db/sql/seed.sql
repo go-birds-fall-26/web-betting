@@ -129,8 +129,3 @@ VALUES
   ('401873056', 2, 10, '5',  '34', '2026-11-15T18:00Z'),
   ('401873060', 2, 10, '9',  '16', '2026-11-15T18:00Z')
 ON CONFLICT (espn_game_id) DO NOTHING;
-
--- Development/Test User
-INSERT INTO users (first_name, last_name, email, password_hash, balance_cents)
-VALUES ('Test', 'User', 'test_user@example.com', 'placeholder_hash', 0)
-ON CONFLICT (email) DO NOTHING;

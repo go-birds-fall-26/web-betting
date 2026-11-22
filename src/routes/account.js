@@ -101,7 +101,7 @@ router.post("/withdraw", async (req, res) => {
 
 function getUserId(req) {
   // TO DO: Add some error handling
-  return Number(req.session.userId || process.env.DEV_USER_ID);
+  return Number(req.session.userId);
 }
 
 function handleWalletError(res, error) {
