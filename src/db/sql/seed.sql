@@ -34,7 +34,11 @@ CREATE TABLE IF NOT EXISTS events (
   away_team_id TEXT NOT NULL REFERENCES teams(id),
   start_time TIMESTAMPTZ NOT NULL,
   status TEXT NOT NULL DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'in_progress', 'final', 'cancelled')),
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  home_score INTEGER CHECK (home_score >= 0),
+  away_score INTEGER CHECK (away_score >= 0),
+  winner_team_id TEXT,
+  last_synced_at TIMESTAMPTZ
 );
 
 CREATE TABLE IF NOT EXISTS markets (

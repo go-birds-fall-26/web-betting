@@ -1,10 +1,23 @@
 const cron = require('node-cron');
+const { syncEvents } = require("./syncEvents");
 
+// syncEvents is run at startup, then every five minutes
 function startJobs() {
-  // PLACEHOLDER TEST JOB it logs the time every minute by default
-  cron.schedule(process.env.DEFAULT_CRON || '* * * * *', () => {
-    console.log('[cron] ding dong', new Date().toISOString());
-  });
+  async function runSync() {
+    try {
+      await syncEvents();
+    } catch (error) {
+      console.error("ESPN sync failed:", error);
+    }
+  }
+
+  runSync();
+
+  cron.schedule(
+    process.env.ESPN_SYNC_CRON || "*/5 * * * *",
+    runSync,
+    { noOverlap: true }
+  );
 }
 
 module.exports = { startJobs };

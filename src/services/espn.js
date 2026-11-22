@@ -1,3 +1,33 @@
+// gets the ESPN scoreboard for a given week (Integer) and returns the json
+// if no week is given, the function will return the json for the current week of events
+async function getScoreboard(week) {
+  const url = new URL ("https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard");
+
+  if (week !== undefined) {
+    url.searchParams.set("week", week);
+  }
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`ESPN scoreboard request failed: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  if (!Array.isArray(data?.events)) {
+    throw new Error("ESPN scoreboard response is missing its events array");
+  }
+
+  // job will depend on ESPN returning a valid week in order to know what the current week is
+  if (!Number.isInteger(data?.week?.number) || data.week.number < 1) {
+    throw new Error("ESPN response is missing a valid week Integer");
+  }
+
+  return data;
+}
+
+
 // returns an json object containing gameId (string), status (string - final, not_final, tie), and winnerTeamId (string)
 // gameId is an exclusive string for every game. this is found in the url of any game on the espn website (ex: https://www.espn.com/nfl/game/_/gameId/401872988/giants-commanders)
 // winnerTeamId represents the teamId of the winning team. every NFL team has an exclusive ID
@@ -80,7 +110,7 @@ async function getGameResult(gameId) {
 
 }
 
-module.exports = { getGameResult };
+module.exports = { getGameResult, getScoreboard };
 
 // tests
 // getGameResult("401873037")
