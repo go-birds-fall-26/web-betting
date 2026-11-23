@@ -8,6 +8,7 @@ const AppError = require("../errors/AppError");
 const ValidBetSides = new Set(Object.values(BetSide));
 
 async function buyContracts(userId, marketId, side, quantity) {
+  side = typeof side === "string" ? side.toLowerCase() : side;
   validateInputs(userId, marketId, side, quantity);
   let client = await pool.connect();
 

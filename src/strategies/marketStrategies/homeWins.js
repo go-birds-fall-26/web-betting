@@ -1,8 +1,9 @@
 // Determine if the home team won
 const AppError = require("../../errors/AppError");
+const { MarketTemplate } = require("../../services/markets");
 
 function validateMarket(event, market) {
-  if (market.template !== "home_wins") {
+  if (market.template !== MarketTemplate.HOME_WINS) {
     throw new AppError("Invalid market template");
   }
 

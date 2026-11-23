@@ -1,3 +1,4 @@
+const AppError = require("../../errors/AppError");
 const homeWins = require("./homeWins");
 
 const strategies = {
@@ -7,7 +8,7 @@ const strategies = {
 function getMarketStrategy(strategyName) {
   let strategy = strategies[strategyName];
   if (!strategy) {
-    throw new Error(`Unsupported market strategy name ${strategyName}`);
+    throw new AppError(`Unsupported market strategy name ${strategyName}`);
   }
   return strategy;
 }

@@ -48,14 +48,11 @@ router.post("/buy", async (req, res) => {
     const { marketId, side, quantity } = req.body;
     let userId = req.session?.userId;
     let parsedMarketId = Number(marketId);
-    let parsedSide = side.toLowerCase();
     let parsedQuantity = Number(quantity);
 
     // Buy Contracts
-    await buyContracts(userId, parsedMarketId, parsedSide, parsedQuantity);
-    return res
-      .status(200)
-      .json({ ok: true, userId, parsedMarketId, parsedSide, parsedQuantity });
+    let bet = await buyContracts(userId, parsedMarketId, side, parsedQuantity);
+    return res.status(200).json({ ok: true, bet });
   } catch (error) {
     if (error instanceof AppError) {
       return res.status(error.statusCode).json({ error: error.message });

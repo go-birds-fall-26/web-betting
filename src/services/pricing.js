@@ -1,5 +1,3 @@
-const { BetSide } = require("./markets");
-
 const K = 10;
 const FEE_RATE_PERCENT = 7;
 const MIN_PRICE_CENTS = 1;
