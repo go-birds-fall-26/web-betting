@@ -11,7 +11,7 @@ const {
 const AppError = require("../errors/AppError");
 const { getUserInformation } = require("../services/users");
 const { getAmountCents, formatAmountCents } = require("../utils/money");
-const { BetSide } = require("../services/betting");
+const { BetSide } = require("../services/markets");
 
 const PLACEHOLDER_PORTFOLIO = {
   summary: { inPositionsCents: 31200, profitCents: 18600, winRate: 58 },

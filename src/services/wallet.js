@@ -67,7 +67,7 @@ async function chargeBet(userId, betId, amountCents, client = null) {
 
   // Uses user defined client so transaction can be rolled back
   if (client) {
-    return applyBalanceChangeWithClient(
+    return applyBalanceChangeUsingClient(
       client,
       userId,
       -amountCents,
@@ -96,7 +96,7 @@ async function processRefund(userId, betId, amountCents) {
   });
 }
 
-async function applyBalanceChangeWithClient(
+async function applyBalanceChangeUsingClient(
   client,
   userId,
   signedAmountCents,
@@ -151,7 +151,7 @@ async function applyBalanceChange(
     // starts a database transaction
     await client.query("BEGIN");
 
-    let newBalance = await applyBalanceChangeWithClient(
+    let newBalance = await applyBalanceChangeUsingClient(
       client,
       userId,
       signedAmountCents,

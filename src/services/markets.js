@@ -1,5 +1,15 @@
 const pool = require("../db/pool");
 
+const MarketTemplate = Object.freeze({
+  HOME_WINS: "home_wins",
+  TEAM_POINTS: "team_points",
+});
+
+const BetSide = Object.freeze({
+  YES: "yes",
+  NO: "no",
+});
+
 // Returns default home-win market (creates one if it doesn't exit)
 async function createHomeWinMarket(eventId, client = pool) {
   if (!Number.isInteger(eventId) || eventId <= 0) {
@@ -22,21 +32,20 @@ async function createHomeWinMarket(eventId, client = pool) {
   let event = result.rows[0];
   let question = `Will the ${event.home_name} beat the ${event.away_name}?`;
 
-  // Create the market, template = home_wins
   let insertResult = await client.query(
     `INSERT INTO markets (event_id, created_by, question, template, params)
     VALUES ($1, NULL, $2, $3, $4) 
     ON CONFLICT (event_id, template) DO NOTHING
     RETURNING *`,
-    [event.id, question, "home_wins", {}],
+    [event.id, question, MarketTemplate.HOME_WINS, {}],
   );
 
   // if market is already created, return the existing market instead.
   if (insertResult.rows.length === 0) {
     let existingMarket = await client.query(
       `SELECT * FROM markets
-          WHERE event_id = $1 AND template = $2`,
-      [event.id, "home_wins"],
+      WHERE event_id = $1 AND template = $2`,
+      [event.id, MarketTemplate.HOME_WINS],
     );
 
     return existingMarket.rows[0];
@@ -45,4 +54,4 @@ async function createHomeWinMarket(eventId, client = pool) {
   return insertResult.rows[0];
 }
 
-module.exports = { createHomeWinMarket };
+module.exports = { MarketTemplate, BetSide, createHomeWinMarket };

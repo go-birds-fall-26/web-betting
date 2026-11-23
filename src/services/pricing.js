@@ -1,4 +1,4 @@
-const { BetSide } = require("./betting");
+const { BetSide } = require("./markets");
 
 const K = 10;
 const FEE_RATE_PERCENT = 7;
@@ -22,18 +22,8 @@ function getFeeCents(contracts, priceCents) {
   return Math.ceil(feeNumerator / 10000);
 }
 
-function getBetTotalCents(side, quantity) {
-  let priceCents =
-    side === BetSide.YES
-      ? getYesPriceCents(market.yes_count, market.no_count)
-      : getNoPriceCents(market.yes_count, market.no_count);
-  let feeCents = getFeeCents(quantity, priceCents);
-  return quantity * priceCents + feeCents;
-}
-
 module.exports = {
   getYesPriceCents,
   getNoPriceCents,
   getFeeCents,
-  getBetTotalCents,
 };
